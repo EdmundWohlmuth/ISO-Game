@@ -28,6 +28,7 @@ public class RandomGen : MonoBehaviour
         
     }
 
+    //-INITAL MAP GENERATION------
     void GenMap()
     {
         tileMap = new int[height, depth];
@@ -37,9 +38,10 @@ public class RandomGen : MonoBehaviour
             SmoothMap();
         }
         GenerateMap();
+        SetClutter();
     }
 
-    void FillMap()
+    void FillMap() // First Pass, randomly sets values to tiles
     {
         System.Random randomNum = new System.Random(seed.GetHashCode());
 
@@ -48,7 +50,7 @@ public class RandomGen : MonoBehaviour
             for (int y = 0; y < depth - 1; y++)
             {
                 //Debug.Log(x + ", " + y);
-                if (x == 0 || x == height - 1 || y == 0 || y == depth - 1) // makes edges empty
+                if (x == 0 || x == height - 1 || y == 0 || y == depth - 1) // encourages empty edges
                 {
                     tileToAdd = null; 
                     tileMap[x, y] = 1;
@@ -68,9 +70,11 @@ public class RandomGen : MonoBehaviour
         {
             for (int y = 0; y < depth -1; y++)
             {
-                if (tileMap[x, y] == 0)
+                if (tileMap[x, y] == 1)
                 {
                     tileToAdd = Instantiate(tile[0], new Vector3(x - (height / 2), -1, y - (depth / 2)), transform.rotation);
+                    tileToAdd.transform.parent = this.gameObject.transform;
+                    tileToAdd.AddComponent<BoxCollider>();
                 }           
             }
         }
@@ -95,7 +99,7 @@ public class RandomGen : MonoBehaviour
         }
     }
 
-    int GetSurroundingTileCount(int mapX, int mapY)
+    int GetSurroundingTileCount(int mapX, int mapY) // checks what the value of the surrounding tiles are
     {
         int count = 0;
 
@@ -109,15 +113,41 @@ public class RandomGen : MonoBehaviour
                     {
 
                         count += tileMap[x, y];
+
+                        // Example:
+                        //  
+                        //    1 1 1
+                        //    1 + 1
+                        //    0 0 0
+                        //
+                        // Value > 4, center object will be land
                     }
-                }
-                else 
-                {
-                    count++;
                 }
             }
         }
 
         return count;
+    }
+    
+    //-POPULATE MAP---------------
+    void SetClutter() // probs should move this to its own thing, repeat the Cellualr process again to get clumps of trees
+    {
+        for (int x = 0; x < height - 1; x++)
+        {
+            for (int y = 0; y < depth - 1; y++)
+            {
+                if (tileMap[x,y] == 1)
+                {
+                    if (Random.Range(0, 30) < 2)
+                    {
+                        Instantiate(tile[2], new Vector3(x - (height / 2), 0, y - (depth / 2)), transform.rotation);
+                    }
+                    else if (Random.Range(0, 30) < 3)
+                    {
+                        Instantiate(tile[3], new Vector3(x - (height / 2), 0, y - (depth / 2)), transform.rotation);
+                    }
+                }
+            }
+        }
     }
 }
