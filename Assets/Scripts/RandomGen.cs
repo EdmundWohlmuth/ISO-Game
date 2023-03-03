@@ -138,7 +138,7 @@ public class RandomGen : MonoBehaviour
             {
                 if (tileMap[x,y] == 1)
                 {
-                    if (Random.Range(0, 30) < 2)
+                    if (Random.Range(0, 50) < 2)
                     {
                         Instantiate(tile[2], new Vector3(x - (height / 2), 0, y - (depth / 2)), transform.rotation);
                     }
