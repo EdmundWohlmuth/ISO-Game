@@ -7,7 +7,8 @@ public class RandomGen : MonoBehaviour
 {
     [SerializeField] GameObject[] tile;
     GameObject tileToAdd;
-    int[,] tileMap;
+    public int[,] tileMap;
+    public int[,] clutterMap;
     public int smoothAmmount;
 
     [SerializeField] int height;
@@ -32,6 +33,7 @@ public class RandomGen : MonoBehaviour
     void GenMap()
     {
         tileMap = new int[height, depth];
+        clutterMap = new int[height, depth];
         FillMap();
         for (int i = 0; i < smoothAmmount; i++)
         {
@@ -72,9 +74,10 @@ public class RandomGen : MonoBehaviour
             {
                 if (tileMap[x, y] == 1)
                 {
-                    tileToAdd = Instantiate(tile[0], new Vector3(x - (height / 2), -1, y - (depth / 2)), transform.rotation);
+                    tileToAdd = Instantiate(tile[0], new Vector3(x, -1, y), transform.rotation);
                     tileToAdd.transform.parent = this.gameObject.transform;
                     tileToAdd.AddComponent<BoxCollider>();
+                    tileToAdd.name = "Grass: " + x + "," + y.ToString();
                 }           
             }
         }
@@ -86,7 +89,7 @@ public class RandomGen : MonoBehaviour
         {
             for (int y = 0; y < depth - 1; y++)
             {
-                int nearbyTiles = GetSurroundingTileCount(x, y);
+                int nearbyTiles = GetSurroundingTileCount(x, y, tileMap);
                 if (nearbyTiles > 4)
                 {
                     tileMap[x, y] = 1;
@@ -99,7 +102,7 @@ public class RandomGen : MonoBehaviour
         }
     }
 
-    int GetSurroundingTileCount(int mapX, int mapY) // checks what the value of the surrounding tiles are
+    public int GetSurroundingTileCount(int mapX, int mapY, int[,] map) // checks what the value of the surrounding tiles are
     {
         int count = 0;
 
@@ -112,7 +115,7 @@ public class RandomGen : MonoBehaviour
                     if (x != mapX || y != mapY)
                     {
 
-                        count += tileMap[x, y];
+                        count += map[x, y];
 
                         // Example:
                         //  
@@ -140,12 +143,19 @@ public class RandomGen : MonoBehaviour
                 {
                     if (Random.Range(0, 50) < 2)
                     {
-                        Instantiate(tile[2], new Vector3(x - (height / 2), 0, y - (depth / 2)), transform.rotation);
+                        tileToAdd = Instantiate(tile[2], new Vector3(x, 0, y), transform.rotation);
+                        tileToAdd.name = "Tree: " + x + "," + y.ToString();
+                        clutterMap[x, y] = 1;
                     }
                     else if (Random.Range(0, 30) < 3)
                     {
-                        Instantiate(tile[3], new Vector3(x - (height / 2), 0, y - (depth / 2)), transform.rotation);
+                        tileToAdd = Instantiate(tile[3], new Vector3(x, 0, y), transform.rotation);
+                        tileToAdd.name = "Tree: " + x + "," + y.ToString();
+                        clutterMap[x, y] = 1;
                     }
+                    else clutterMap[x, y] = 0;
+
+
                 }
             }
         }

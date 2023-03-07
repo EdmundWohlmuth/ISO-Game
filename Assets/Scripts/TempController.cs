@@ -9,19 +9,24 @@ public class TempController : MonoBehaviour
     float horizontalSpeed = 15f;
     Camera cam;
     [Header("tilemap")]
-    [SerializeField] Tilemap tilemap = null;
-    [SerializeField] TileBase tileBase = null;
+    [SerializeField] RandomGen randGen;
+    int[,] worldMap;
+    int[,] clutterMap;
     [SerializeField] GameObject dummyObject;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
+        dummyObject = Instantiate(dummyObject, transform.position, transform.rotation);
     }
 
     // Update is called once per frame
     void Update()
     {
+        worldMap = randGen.tileMap;
+        clutterMap = randGen.clutterMap;
+
         // camera movement
         Movement();
         CameraScroll();
@@ -74,28 +79,33 @@ public class TempController : MonoBehaviour
         if (Physics.Raycast(ray, out hit) && dummyObject != null) // show building placement
         {
             Vector3 worldPos = new Vector3(hit.point.x, 0.4f, hit.point.z);
-            worldPos = Vector3Int.FloorToInt(worldPos);
+            worldPos = Vector3Int.FloorToInt(worldPos);     
 
             dummyObject.transform.position = Vector3Int.FloorToInt(worldPos);
-        }
 
-
-        if (Input.GetMouseButtonDown(0))
-        {          
-            if (Physics.Raycast(ray, out hit) && dummyObject != null) // place building
+            if (Input.GetMouseButtonDown(0))
             {
-                Vector3 worldPos = hit.point;
-
-                Debug.Log(hit.point);
+                //Debug.Log(hit.point);
                 worldPos = Vector3Int.FloorToInt(worldPos);
-                Debug.Log("Mouse position in world space: " + worldPos);
+                //Debug.Log("Mouse position in world space: " + worldPos);
+                Debug.Log("ground: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, worldMap));
+                Debug.Log("trees: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, clutterMap));
 
-                Instantiate(dummyObject, new Vector3(worldPos.x, 0.3f, worldPos.z), transform.rotation);
-                Destroy(dummyObject);
-                dummyObject = null;
-                
+                if (randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, worldMap) == 8 &&
+                    randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, clutterMap) == 0)
+                {
+                    Instantiate(dummyObject, new Vector3(worldPos.x, 0.3f, worldPos.z), transform.rotation);
+                    Destroy(dummyObject);
+                    dummyObject = null;
+                }
+
+
             }
+
         }
+
+
+
     }
 
 
