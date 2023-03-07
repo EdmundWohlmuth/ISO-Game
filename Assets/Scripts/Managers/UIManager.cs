@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] Canvas MainMenu_;
-    [SerializeField] Canvas Gameplay_;
-    [SerializeField] Canvas Construction_;
+    [SerializeField] Canvas MainMenu;
+    [SerializeField] Canvas Gameplay;
+    [SerializeField] Canvas Construction;
+    [SerializeField] LevelManager levelManager;
 
     [Header("Construction Button")]
     bool constructionOpen = false;
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour
     [Header("Decor Button")]
     bool decorationOpen = false;
     GameObject decorButton;
+    
 
     public enum CurrentScreen
     {
@@ -23,17 +25,23 @@ public class UIManager : MonoBehaviour
     }
     public CurrentScreen currentScreen;
 
-    // Start is called before the first frame update
-    void Start()
+    public void MainMenuScreen()
     {
-        
+        MainMenu.enabled = true;
+        Gameplay.enabled = false;
+    }
+    public void GameplayScreen()
+    {
+        MainMenu.enabled = false;
+        Gameplay.enabled = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartGame()
     {
-        
+        GameplayScreen();
+        levelManager.LoadGameplay();
     }
+
 
     public void OpenCloseConstruction()
     {
