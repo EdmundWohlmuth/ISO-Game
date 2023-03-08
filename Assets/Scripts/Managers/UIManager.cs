@@ -6,16 +6,27 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] Canvas MainMenu;
     [SerializeField] Canvas Gameplay;
-    [SerializeField] Canvas Construction;
     [SerializeField] LevelManager levelManager;
 
     [Header("Construction Button")]
     bool constructionOpen = false;
-    GameObject constButton;
+    public GameObject constButton;
     [Header("Decor Button")]
     bool decorationOpen = false;
-    GameObject decorButton;
-    
+    public GameObject decorButton;
+
+    private void Start()
+    {
+        //MainMenuScreen();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            OpenCloseConstruction();
+        }
+    }
 
     public enum CurrentScreen
     {
@@ -48,11 +59,12 @@ public class UIManager : MonoBehaviour
         if (constructionOpen)
         {
             constructionOpen = false;
+            constButton.transform.position = new Vector3(30f, 0, 0);
         }
         else
         {
-
             constructionOpen = true;
+            constButton.transform.position = new Vector3(30f, 190, 0);
         }
     }
 }

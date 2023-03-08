@@ -14,11 +14,18 @@ public class TempController : MonoBehaviour
     int[,] clutterMap;
     [SerializeField] GameObject dummyObject;
 
+    [Header("Build Objects")]
+    public GameObject house;
+    bool building;
+    public GameObject farm;
+    bool tillingLand;
+
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
         dummyObject = Instantiate(dummyObject, transform.position, transform.rotation);
+        building = true;
     }
 
     // Update is called once per frame
@@ -33,6 +40,12 @@ public class TempController : MonoBehaviour
 
         // raycast to curosr pos
         MouseToPos();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Destroy(dummyObject);
+            dummyObject = null;
+        }
     }
 
     void Movement()
@@ -64,7 +77,6 @@ public class TempController : MonoBehaviour
             }
         }
     }
-
     void MouseToPos()
     {
         Vector3 mousePos = Input.mousePosition;
@@ -85,28 +97,66 @@ public class TempController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                //Debug.Log(hit.point);
                 worldPos = Vector3Int.FloorToInt(worldPos);
-                //Debug.Log("Mouse position in world space: " + worldPos);
-                Debug.Log("ground: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, worldMap));
-                Debug.Log("trees: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, clutterMap));
 
-                if (randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, worldMap) == 8 &&
-                    randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, clutterMap) == 0)
+                //Debug.Log(hit.point);
+                //Debug.Log("Mouse position in world space: " + worldPos);
+                //Debug.Log("ground: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, worldMap));
+                //Debug.Log("trees: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, clutterMap));
+
+                if (PlacementCheck((int)worldPos.x, (int)worldPos.z) && building)
                 {
-                    Instantiate(dummyObject, new Vector3(worldPos.x, 0.3f, worldPos.z), transform.rotation);
+
+                    Instantiate(dummyObject, new Vector3(worldPos.x, 0.1f, worldPos.z), transform.rotation);
                     Destroy(dummyObject);
                     dummyObject = null;
+
+                    building = false;
+                }
+                else if (FarmCheck((int)worldPos.x, (int)worldPos.z) && tillingLand)
+                {
+                    Instantiate(dummyObject, new Vector3(worldPos.x, -1f, worldPos.z), transform.rotation);
+                    GameObject grassToRemove = GameObject.Find("Grass: " + worldPos.x + "," + worldPos.z.ToString());
+                    Destroy(grassToRemove);
+                    Destroy(dummyObject);
+                    dummyObject = null;
+
+                    tillingLand = false;
                 }
 
-
+                // set position to unplaceable;
             }
-
         }
-
-
-
     }
 
+    bool PlacementCheck(int x, int z)
+    {
+        if (randGen.GetSurroundingTileCount(x, z, worldMap) == 8 &&
+        randGen.GetSurroundingTileCount(x, z, clutterMap) == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+    bool FarmCheck(int x, int z)
+    {
+        if (worldMap[x,z] == 1 &&
+        clutterMap[x, z] == 0)
+        {
+            return true;
+        }
+        return false;
+    }
 
+    //-BUILDING---------
+    public void PlaceHouse()
+    {
+        dummyObject = Instantiate(house, transform.position, transform.rotation);
+        building = true;
+    }
+    public void PlaceFarm()
+    {
+        dummyObject = Instantiate(farm, transform.position, transform.rotation);
+        tillingLand = true;
+    }
 }
