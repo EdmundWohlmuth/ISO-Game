@@ -16,9 +16,12 @@ public class TempController : MonoBehaviour
 
     [Header("Build Objects")]
     public GameObject house;
-    bool building;
+    [SerializeField] bool building;
     public GameObject farm;
-    bool tillingLand;
+    [SerializeField] bool tillingLand;
+
+    [Header("Villager Control")]
+    public VillagerController VC = null;
 
     // Start is called before the first frame update
     void Start()
@@ -82,8 +85,7 @@ public class TempController : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 1.5f;
         mousePos = cam.ScreenToViewportPoint(mousePos);
-        mousePos.z = 0f; // set the z-coordinate to 0, since we're working with an orthographic camera
-        //Debug.DrawRay(transform.position, mousePos - transform.position, Color.blue);
+        mousePos.z = 0f;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -98,34 +100,45 @@ public class TempController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 worldPos = Vector3Int.FloorToInt(worldPos);
-
-                //Debug.Log(hit.point);
-                //Debug.Log("Mouse position in world space: " + worldPos);
-                //Debug.Log("ground: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, worldMap));
-                //Debug.Log("trees: " + randGen.GetSurroundingTileCount((int)worldPos.x, (int)worldPos.z, clutterMap));
-
-                if (PlacementCheck((int)worldPos.x, (int)worldPos.z) && building)
-                {
-
-                    Instantiate(dummyObject, new Vector3(worldPos.x, 0.1f, worldPos.z), transform.rotation);
-                    Destroy(dummyObject);
-                    dummyObject = null;
-
-                    building = false;
-                }
-                else if (FarmCheck((int)worldPos.x, (int)worldPos.z) && tillingLand)
-                {
-                    Instantiate(dummyObject, new Vector3(worldPos.x, -1f, worldPos.z), transform.rotation);
-                    GameObject grassToRemove = GameObject.Find("Grass: " + worldPos.x + "," + worldPos.z.ToString());
-                    Destroy(grassToRemove);
-                    Destroy(dummyObject);
-                    dummyObject = null;
-
-                    tillingLand = false;
-                }
-
-                // set position to unplaceable;
+                //-PLACEMENT-----------
+                if (building || tillingLand) PlaceObj((int)worldPos.x, (int)worldPos.z);
             }
+        }
+        else if (Physics.Raycast(ray, out hit))
+        {
+            //-SELECT-VILLAGER-----
+            if (Input.GetMouseButtonDown(0) && building == false && tillingLand == false)
+            {
+                if (hit.transform.tag == "villager")
+                {
+                    Debug.Log("villager");
+                    VC = hit.transform.gameObject.GetComponent<VillagerController>();
+                    VC.isSelected = true;
+                }
+            }
+            else VC = null;
+        }
+    }
+
+    void PlaceObj(int x, int z) // place building
+    {
+        if (PlacementCheck(x, z) && building)
+        {
+            Instantiate(dummyObject, new Vector3(x, 0.1f, z), transform.rotation);
+            Destroy(dummyObject);
+            dummyObject = null;
+
+            building = false;
+        }
+        else if (FarmCheck(x, z) && tillingLand)
+        {
+            Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
+            GameObject grassToRemove = GameObject.Find("Grass: " + x + "," + z.ToString());
+            Destroy(grassToRemove);
+            Destroy(dummyObject);
+            dummyObject = null;
+
+            tillingLand = false;
         }
     }
 

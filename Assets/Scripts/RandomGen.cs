@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using UnityEngine.AI;
 
 public class RandomGen : MonoBehaviour
 {
@@ -10,6 +10,9 @@ public class RandomGen : MonoBehaviour
     public int[,] tileMap;
     public int[,] clutterMap;
     public int smoothAmmount;
+
+    [SerializeField] NavMeshData navData;
+    [SerializeField] NavMeshDataInstance navInstance;
 
     [SerializeField] int height;
     [SerializeField] int depth;
@@ -157,6 +160,18 @@ public class RandomGen : MonoBehaviour
 
 
                 }
+            }
+        }
+    }
+
+    //-BAKE-NAV-MESH-----
+    void UpdateNavMesh()
+    {
+        for (int x = 0; x < height; x++)
+        {
+            for (int z = 0; z < depth; z++)
+            {
+                
             }
         }
     }
