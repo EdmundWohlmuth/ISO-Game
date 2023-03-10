@@ -1193,7 +1193,10 @@ MonoBehaviour:
   randGen: {fileID: 1120234399}
   dummyObject: {fileID: 1449543696}
   house: {fileID: 1232766363669618, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
+  building: 0
   farm: {fileID: 919132149155446097, guid: b67bc12c552e5284097802b37684fe32, type: 3}
+  tillingLand: 0
+  VC: {fileID: 0}
 --- !u!1 &553006089
 GameObject:
   m_ObjectHideFlags: 0
@@ -2577,6 +2580,7 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 673264d3ef5c79244bd6c36db0fc0131, type: 3}
   - {fileID: 919132149155446097, guid: b2b1359bc6d55754f85a3bb8092acb1c, type: 3}
   smoothAmmount: 10
+  navData: {fileID: 0}
   height: 60
   depth: 60
   seed: 
