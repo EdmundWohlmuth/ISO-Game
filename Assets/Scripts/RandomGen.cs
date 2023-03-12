@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using Unity.AI.Navigation;
 
 public class RandomGen : MonoBehaviour
 {
     [SerializeField] GameObject[] tile;
+    public NavMeshSurface surface;
     GameObject tileToAdd;
     public int[,] tileMap;
     public int[,] clutterMap;
     public int smoothAmmount;
-
-    [SerializeField] NavMeshData navData;
-    [SerializeField] NavMeshDataInstance navInstance;
 
     [SerializeField] int height;
     [SerializeField] int depth;
@@ -24,6 +22,7 @@ public class RandomGen : MonoBehaviour
     {
         seed = System.DateTime.Now.ToString();
         GenMap();
+        surface.BuildNavMesh();
     }
 
     // Update is called once per frame
@@ -80,6 +79,7 @@ public class RandomGen : MonoBehaviour
                     tileToAdd = Instantiate(tile[0], new Vector3(x, -1, y), transform.rotation);
                     tileToAdd.transform.parent = this.gameObject.transform;
                     tileToAdd.AddComponent<BoxCollider>();
+                    tileToAdd.tag = "ground";
                     tileToAdd.name = "Grass: " + x + "," + y.ToString();
                 }           
             }

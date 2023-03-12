@@ -107,7 +107,7 @@ public class TempController : MonoBehaviour
         else if (Physics.Raycast(ray, out hit))
         {
             //-SELECT-VILLAGER-----
-            if (Input.GetMouseButtonDown(0) && building == false && tillingLand == false)
+            if (Input.GetMouseButtonDown(0) && building == false && tillingLand == false && VC == null)
             {
                 if (hit.transform.tag == "villager")
                 {
@@ -116,7 +116,23 @@ public class TempController : MonoBehaviour
                     VC.isSelected = true;
                 }
             }
-            else VC = null;
+            else if(Input.GetMouseButtonDown(0) && building == false && tillingLand == false && VC != null)
+            {
+                if (hit.transform.tag == "villager")
+                {
+                    VC.isSelected = false;
+                    VC = null;
+
+                    VC = hit.transform.gameObject.GetComponent<VillagerController>();
+                    VC.isSelected = true;
+                }
+                else
+                {
+                    VC.isSelected = false;
+                    VC = null;
+                }
+            }
+            
         }
     }
 
@@ -125,6 +141,7 @@ public class TempController : MonoBehaviour
         if (PlacementCheck(x, z) && building)
         {
             Instantiate(dummyObject, new Vector3(x, 0.1f, z), transform.rotation);
+            dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();
             Destroy(dummyObject);
             dummyObject = null;
 
@@ -161,7 +178,7 @@ public class TempController : MonoBehaviour
         return false;
     }
 
-    //-BUILDING---------
+    //-BUILDING-SELECTION--------
     public void PlaceHouse()
     {
         dummyObject = Instantiate(house, transform.position, transform.rotation);

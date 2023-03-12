@@ -6,9 +6,9 @@ using UnityEngine.AI;
 public class VillagerController : MonoBehaviour
 {
     [SerializeField] NavMeshAgent agent;
-    [SerializeField] Camera cam;
+    public Camera cam;
     public bool isSelected;
-    [SerializeField] TempController controller;
+    public TempController controller;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +21,8 @@ public class VillagerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1) && isSelected)
         {
+            Debug.Log("Right Click!");
+
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
@@ -40,6 +42,7 @@ public class VillagerController : MonoBehaviour
                 }
                 else if (hit.transform.tag == "ground")
                 {
+                    Debug.Log("ground hit");
                     agent.SetDestination(hit.point);
                 }
             }
