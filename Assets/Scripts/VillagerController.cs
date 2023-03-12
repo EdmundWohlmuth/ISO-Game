@@ -13,7 +13,8 @@ public class VillagerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        controller = GameObject.Find("Controller").GetComponent<TempController>();
     }
 
     // Update is called once per frame

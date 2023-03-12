@@ -11,10 +11,14 @@ public class SpawnVillagers : MonoBehaviour
 
     public void SpawnVillager()
     {
-        for (int i = 0; i <= ammount; i++)
+        villager.transform.position = new Vector3(gameObject.transform.position.x + 1, 1, gameObject.transform.position.z - 2);
+        villager.GetComponent<VillagerController>().cam = cam;
+        villager.GetComponent<VillagerController>().controller = player;
+
+        for (int i = 0; i < ammount; i++)
         {
             Instantiate(villager);
-            villager.transform.position = new Vector3(gameObject.transform.position.x + i, 1, gameObject.transform.position.z - 2);
+            villager.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z - 2);
             villager.GetComponent<VillagerController>().cam = cam;
             villager.GetComponent<VillagerController>().controller = player;
         }
