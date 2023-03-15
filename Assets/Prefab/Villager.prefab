@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2049625204821369922}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 33, y: 1, z: 40}
+  m_LocalPosition: {x: 22, y: 1, z: 45}
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -138,3 +138,11 @@ MonoBehaviour:
   cam: {fileID: 0}
   isSelected: 0
   controller: {fileID: 0}
+  currentNode: {fileID: 0}
+  townHall: {fileID: 0}
+  state: 0
+  resource: 0
+  harvestValue: 2
+  carryCapacity: 20
+  harvestTime: 0
+  collected: 0

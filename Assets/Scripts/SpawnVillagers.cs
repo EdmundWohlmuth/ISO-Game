@@ -14,6 +14,7 @@ public class SpawnVillagers : MonoBehaviour
         villager.transform.position = new Vector3(gameObject.transform.position.x + 1, 1, gameObject.transform.position.z - 2);
         villager.GetComponent<VillagerController>().cam = cam;
         villager.GetComponent<VillagerController>().controller = player;
+        villager.GetComponent<VillagerController>().townHall = GameObject.Find("TownHall(Clone)");
 
         for (int i = 0; i < ammount; i++)
         {
@@ -21,6 +22,7 @@ public class SpawnVillagers : MonoBehaviour
             villager.transform.position = new Vector3(gameObject.transform.position.x, 1, gameObject.transform.position.z - 2);
             villager.GetComponent<VillagerController>().cam = cam;
             villager.GetComponent<VillagerController>().controller = player;
+            villager.GetComponent<VillagerController>().townHall = GameObject.Find("TownHall(Clone)");
         }
         
     }

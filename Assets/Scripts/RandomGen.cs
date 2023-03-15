@@ -148,12 +148,22 @@ public class RandomGen : MonoBehaviour
                     {
                         tileToAdd = Instantiate(tile[2], new Vector3(x, 0, y), transform.rotation);
                         tileToAdd.name = "Tree: " + x + "," + y.ToString();
+                        tileToAdd.tag = "tree";
+                        tileToAdd.AddComponent<MeshCollider>();
+                        tileToAdd.AddComponent<ResourceNode>();
+                        tileToAdd.GetComponent<ResourceNode>().resource = 0;
+                        tileToAdd.GetComponent<ResourceNode>().maxResources = 160;
                         clutterMap[x, y] = 1;
                     }
                     else if (Random.Range(0, 30) < 3)
                     {
                         tileToAdd = Instantiate(tile[3], new Vector3(x, 0, y), transform.rotation);
                         tileToAdd.name = "Tree: " + x + "," + y.ToString();
+                        tileToAdd.tag = "tree";
+                        tileToAdd.AddComponent<MeshCollider>();
+                        tileToAdd.AddComponent<ResourceNode>();
+                        tileToAdd.GetComponent<ResourceNode>().resource = 0;
+                        tileToAdd.GetComponent<ResourceNode>().maxResources = 160;
                         clutterMap[x, y] = 1;
                     }
                     else clutterMap[x, y] = 0;

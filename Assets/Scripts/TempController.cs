@@ -28,6 +28,7 @@ public class TempController : MonoBehaviour
     {
         cam = Camera.main;
         dummyObject = Instantiate(dummyObject, transform.position, transform.rotation);
+        dummyObject.name = "TownHall";
         building = true;
     }
 
@@ -111,7 +112,7 @@ public class TempController : MonoBehaviour
             {
                 if (hit.transform.tag == "villager")
                 {
-                    Debug.Log("villager");
+                   // Debug.Log("villager");
                     VC = hit.transform.gameObject.GetComponent<VillagerController>();
                     VC.isSelected = true;
                 }
