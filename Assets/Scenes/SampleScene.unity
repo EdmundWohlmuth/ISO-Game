@@ -418,8 +418,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250, y: -50}
-  m_SizeDelta: {x: 500, y: 100}
+  m_AnchoredPosition: {x: -395.5738, y: -50}
+  m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &36158388
 MonoBehaviour:
@@ -603,7 +603,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 200, y: 0}
+  m_AnchoredPosition: {x: 233.04918, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &84355112
@@ -1951,11 +1951,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 932f269b2bb78ef468a6cb00ca87e12c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GM: {fileID: 1189787010}
   MainMenu: {fileID: 57007095}
   Gameplay: {fileID: 1085483696}
   levelManager: {fileID: 1231208262}
   constButton: {fileID: 1337080559}
   decorButton: {fileID: 1942685205}
+  woodPool: {fileID: 1853191176}
+  stonePool: {fileID: 814832249}
+  foodPool: {fileID: 84355112}
   currentScreen: 1
 --- !u!1 &789520311
 GameObject:
@@ -2127,7 +2131,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 40, y: 0}
+  m_AnchoredPosition: {x: -12.721315, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &814832249
@@ -2575,7 +2579,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4003897846794392, guid: cd87e5026d1695148aabe96121c526ef, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4003897846794392, guid: cd87e5026d1695148aabe96121c526ef, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2934,6 +2938,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e339412c95a55864cabc1ef218e7e48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  woodPool: 0
+  stonePool: 0
+  foodPool: 0
 --- !u!114 &1189787011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4058,7 +4065,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -120, y: 0}
+  m_AnchoredPosition: {x: -260.45905, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1853191176

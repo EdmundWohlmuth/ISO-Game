@@ -14,6 +14,9 @@ public class ResourceNode : MonoBehaviour
 
     public int maxResources;
     public int currentResources;
+    public RandomGen gen;
+    public int x;
+    public int y;
 
 
     // Start is called before the first frame update
@@ -30,6 +33,7 @@ public class ResourceNode : MonoBehaviour
 
         if (currentResources <= 0)
         {
+            gen.clutterMap[x, y] = 0;
             Destroy(gameObject);           
         }
     }

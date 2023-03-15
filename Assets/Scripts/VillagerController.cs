@@ -7,11 +7,11 @@ public class VillagerController : MonoBehaviour
 {
     [Header("Refrences")]
     [SerializeField] NavMeshAgent agent;
-    public Camera cam;
-    public bool isSelected;
+    public Camera cam;   
     public TempController controller;
     [SerializeField] GameObject currentNode;
     public GameObject townHall;
+    public GameManager GM;
     public enum currentResource
     {
         none,
@@ -31,6 +31,7 @@ public class VillagerController : MonoBehaviour
     [Header("states")]
     public playerState state;
     public currentResource resource;
+    public bool isSelected;
 
     [Header("Resource colletion")]
     [SerializeField] int harvestValue = 2;
@@ -50,6 +51,7 @@ public class VillagerController : MonoBehaviour
         state = playerState.walking;
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         controller = GameObject.Find("Controller").GetComponent<TempController>();
+        GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -194,8 +196,9 @@ public class VillagerController : MonoBehaviour
 
                 case currentResource.wood:
                     //Debug.Log("Deposited wood");
+                    GM.woodPool += collected;
                     collected = 0;
-                    // set stockpile
+                    
                     break;
 
                 case currentResource.stone:

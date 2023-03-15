@@ -153,6 +153,9 @@ public class RandomGen : MonoBehaviour
                         tileToAdd.AddComponent<ResourceNode>();
                         tileToAdd.GetComponent<ResourceNode>().resource = 0;
                         tileToAdd.GetComponent<ResourceNode>().maxResources = 160;
+                        tileToAdd.GetComponent<ResourceNode>().gen = this;
+                        tileToAdd.GetComponent<ResourceNode>().x = x;
+                        tileToAdd.GetComponent<ResourceNode>().y = y;
                         clutterMap[x, y] = 1;
                     }
                     else if (Random.Range(0, 30) < 3)
@@ -164,7 +167,10 @@ public class RandomGen : MonoBehaviour
                         tileToAdd.AddComponent<ResourceNode>();
                         tileToAdd.GetComponent<ResourceNode>().resource = 0;
                         tileToAdd.GetComponent<ResourceNode>().maxResources = 160;
-                        clutterMap[x, y] = 1;
+                        tileToAdd.GetComponent<ResourceNode>().gen = this;
+                        tileToAdd.GetComponent<ResourceNode>().x = x;
+                        tileToAdd.GetComponent<ResourceNode>().y = y;
+                      clutterMap[x, y] = 1;
                     }
                     else clutterMap[x, y] = 0;
 

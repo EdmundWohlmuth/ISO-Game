@@ -1,19 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Refrences")]
+    [SerializeField] GameManager GM;
+    [Header("Canvas'")]
     [SerializeField] Canvas MainMenu;
     [SerializeField] Canvas Gameplay;
     [SerializeField] LevelManager levelManager;
 
+    [Header("UI Elements")]
     [Header("Construction Button")]
     bool constructionOpen = false;
     public GameObject constButton;
     [Header("Decor Button")]
     bool decorationOpen = false;
     public GameObject decorButton;
+    [Header("Resources")]
+    public TMP_Text woodPool;
+    public TMP_Text stonePool;
+    public TMP_Text foodPool;
+
+    public enum CurrentScreen
+    {
+        _MainMenu,
+        _Gameplay,
+        Construction
+    }
+    public CurrentScreen currentScreen;
 
     private void Start()
     {
@@ -26,15 +44,12 @@ public class UIManager : MonoBehaviour
         {
             OpenCloseConstruction();
         }
-    }
 
-    public enum CurrentScreen
-    {
-        _MainMenu,
-        _Gameplay,
-        Construction
+        if (currentScreen == CurrentScreen._Gameplay)
+        {
+            UpdateHUD();
+        }
     }
-    public CurrentScreen currentScreen;
 
     public void MainMenuScreen()
     {
@@ -66,5 +81,12 @@ public class UIManager : MonoBehaviour
             constructionOpen = true;
             constButton.transform.position = new Vector3(30f, 190, 0);
         }
+    }
+
+    void UpdateHUD()
+    {
+        woodPool.text = "Wood: " + GM.woodPool.ToString();
+        stonePool.text = "Stone: " + GM.stonePool.ToString();
+        foodPool.text = "Food: " + GM.foodPool.ToString();
     }
 }
