@@ -7,6 +7,8 @@ TagManager:
   - villager
   - ground
   - tree
+  - food
+  - farm
   layers:
   - Default
   - TransparentFX

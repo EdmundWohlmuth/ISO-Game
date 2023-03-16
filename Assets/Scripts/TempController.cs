@@ -141,18 +141,33 @@ public class TempController : MonoBehaviour
     {
         if (PlacementCheck(x, z) && building)
         {
+            dummyObject.AddComponent<MeshCollider>();
             Instantiate(dummyObject, new Vector3(x, 0.1f, z), transform.rotation);
-            dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();
+            dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();           
             Destroy(dummyObject);
             dummyObject = null;
 
             building = false;
         }
-        else if (FarmCheck(x, z) && tillingLand)
+        else if (PlacementCheck(x, z) && tillingLand)
         {
-            Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
+          /*Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
             GameObject grassToRemove = GameObject.Find("Grass: " + x + "," + z.ToString());
             Destroy(grassToRemove);
+            Destroy(dummyObject);
+            dummyObject = null;*/        
+
+            for (int a = x - 1; a <= x + 1; a++)
+            {
+                for (int b = z - 1; b <= z + 1; b++)
+                {
+                    GameObject grassToRemove = GameObject.Find("Grass: " + a + "," + b.ToString());
+                    Destroy(grassToRemove);
+                }
+            }
+
+            Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
+
             Destroy(dummyObject);
             dummyObject = null;
 

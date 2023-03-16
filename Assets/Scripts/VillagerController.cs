@@ -26,7 +26,8 @@ public class VillagerController : MonoBehaviour
         chopingWood,
         miningStone,
         harvestingCrops,
-        dropSupplies
+        dropSupplies,
+        planting
     }
     [Header("states")]
     public playerState state;
@@ -93,6 +94,12 @@ public class VillagerController : MonoBehaviour
                 }
                 else if (hit.transform.tag == "farm")
                 {
+                    Debug.Log("plant");
+                    agent.SetDestination(hit.transform.position);
+                    state = playerState.planting;
+                }
+                else if (hit.transform.tag == "food")
+                {
                     Debug.Log("farm");
                     agent.SetDestination(hit.transform.position);
                     state = playerState.harvestingCrops;
@@ -104,6 +111,7 @@ public class VillagerController : MonoBehaviour
                 {
                     Debug.Log("moving");
                     agent.SetDestination(hit.point);
+                    state = playerState.walking;
                 }
 
                 if (state != playerState.walking)
@@ -154,15 +162,32 @@ public class VillagerController : MonoBehaviour
 
             case playerState.harvestingCrops:
                 if (currentNode == null) return;
-                else if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1)
+
+                if (currentNode.GetComponent<FarmController>().state == FarmController.states.grown)
                 {
-                    CollectionTimer();
+                    if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1)
+                    {
+                        CollectionTimer();
+                    }
+
+                    if (collected == carryCapacity)
+                    {
+                        Return();
+                    }
                 }
 
-                if (collected == carryCapacity)
+                break;
+
+            case playerState.planting:
+
+                if (currentNode.GetComponent<FarmController>().state == FarmController.states.idle)
                 {
-                    Return();
+                    if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1)
+                    {
+                        currentNode.GetComponent<FarmController>().seeded = true;
+                    }
                 }
+
                 break;
         }
     }
@@ -205,6 +230,8 @@ public class VillagerController : MonoBehaviour
                     break;
 
                 case currentResource.food:
+                    GM.foodPool += collected;
+                    collected = 0;
                     break;
 
                 default:
