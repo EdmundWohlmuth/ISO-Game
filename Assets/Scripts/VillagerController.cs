@@ -47,7 +47,7 @@ public class VillagerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Value: " + harvestValue);
+        //Debug.Log("Value: " + harvestValue);
         harvestTime = maxHarvestTime;
         state = playerState.walking;
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -73,7 +73,7 @@ public class VillagerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.tag == "tree")
+                if (hit.transform.tag == "tree" && collected == 0 || hit.transform.tag == "tree" && resource == currentResource.wood)
                 {
                     //Debug.Log("chop");
                     // harvest
@@ -83,33 +83,38 @@ public class VillagerController : MonoBehaviour
                     harvestValue = woodCollectionAmmount;
                     Debug.Log("Value: " + harvestValue);
                 }
-                else if (hit.transform.tag == "rock")
+                else if (hit.transform.tag == "rock" && collected == 0 || hit.transform.tag == "rock" && resource == currentResource.stone)
                 {
-                    Debug.Log("mine");
+                    //Debug.Log("mine");
                     agent.SetDestination(hit.transform.position);
                     state = playerState.miningStone;
                     resource = currentResource.stone;
                     harvestValue = stoneCollectionAmmount;
                     // mine
                 }
-                else if (hit.transform.tag == "farm")
+                else if (hit.transform.tag == "farm" && collected == 0 || hit.transform.tag == "farm" && state == playerState.planting)
                 {
-                    Debug.Log("plant");
+                    //Debug.Log("plant");
                     agent.SetDestination(hit.transform.position);
                     state = playerState.planting;
                 }
-                else if (hit.transform.tag == "food")
+                else if (hit.transform.tag == "food" && collected == 0 || hit.transform.tag == "food" && resource == currentResource.food)
                 {
-                    Debug.Log("farm");
+                    //Debug.Log("farm");
                     agent.SetDestination(hit.transform.position);
                     state = playerState.harvestingCrops;
                     resource = currentResource.food;
                     harvestValue = foodCollectionAmmount;
                     // farm
                 }
+                else if (hit.transform.tag == "townhall")
+                {
+                    //Debug.Log("return");
+                    Return();
+                }
                 else if (hit.transform.tag == "ground")
                 {
-                    Debug.Log("moving");
+                    //Debug.Log("moving");
                     agent.SetDestination(hit.point);
                     state = playerState.walking;
                 }
@@ -163,17 +168,15 @@ public class VillagerController : MonoBehaviour
             case playerState.harvestingCrops:
                 if (currentNode == null) return;
 
-                if (currentNode.GetComponent<FarmController>().state == FarmController.states.grown)
+                //Debug.Log(Vector3.Distance(gameObject.transform.position, currentNode.transform.position));
+                if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1.4)
                 {
-                    if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1)
-                    {
-                        CollectionTimer();
-                    }
+                    CollectionTimer();
+                }
 
-                    if (collected == carryCapacity)
-                    {
-                        Return();
-                    }
+                if (collected == carryCapacity)
+                {
+                    Return();
                 }
 
                 break;
@@ -182,8 +185,10 @@ public class VillagerController : MonoBehaviour
 
                 if (currentNode.GetComponent<FarmController>().state == FarmController.states.idle)
                 {
-                    if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1)
+                    //Debug.Log("idle");
+                    if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1.4)
                     {
+                        //Debug.Log("farm");
                         currentNode.GetComponent<FarmController>().seeded = true;
                     }
                 }
@@ -196,7 +201,7 @@ public class VillagerController : MonoBehaviour
     {
         if (collected < carryCapacity)
         {
-            Debug.Log("Value: " + harvestValue);
+           // Debug.Log("Value: " + harvestValue);
             currentNode.GetComponent<ResourceNode>().DecrimentResources(harvestValue);
             collected += harvestValue;
         } 
@@ -208,10 +213,10 @@ public class VillagerController : MonoBehaviour
     }
     void Return()
     {
-        Debug.Log("return");
+        //Debug.Log("return");
         agent.SetDestination(townHall.transform.position);
-        Debug.Log("Distance: " + Vector3.Distance(gameObject.transform.position, townHall.transform.position));
-        if (Vector3.Distance(gameObject.transform.position, townHall.transform.position) <= 2.25f)
+        //Debug.Log("Distance: " + Vector3.Distance(gameObject.transform.position, townHall.transform.position));
+        if (Vector3.Distance(gameObject.transform.position, townHall.transform.position) <= 2.35f)
         {         
             switch (resource)
             {
@@ -250,6 +255,20 @@ public class VillagerController : MonoBehaviour
         else
         {
             harvestTime -= Time.deltaTime;
+        }
+    }
+
+    bool GenaricTimer()
+    {
+        if (harvestTime <= 0)
+        {           
+            harvestTime = maxHarvestTime;
+            return true;
+        }
+        else
+        {
+            harvestTime -= Time.deltaTime;
+            return false;
         }
     }
 

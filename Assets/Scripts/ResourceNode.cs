@@ -17,6 +17,7 @@ public class ResourceNode : MonoBehaviour
     public RandomGen gen;
     public int x;
     public int y;
+    public FarmController crops;
 
 
     // Start is called before the first frame update
@@ -27,14 +28,21 @@ public class ResourceNode : MonoBehaviour
 
     public void DecrimentResources(int decrimentValue)
     {
-        if (currentResources <= (currentResources -= 20)) return;
-        currentResources -= decrimentValue;
-        Debug.Log(currentResources);
+        //if (currentResources <= (currentResources -= 20)) return;
 
-        if (currentResources <= 0)
+        currentResources -= decrimentValue;
+        Debug.Log("resources left: " + currentResources);
+
+        if (currentResources <= 0 && resource != resourceType.food)
         {
             gen.clutterMap[x, y] = 0;
-            Destroy(gameObject);           
+            Destroy(gameObject);
+        }
+        else if ((currentResources <= 0 && resource == resourceType.food))
+        {
+            Debug.Log("farming done");
+           crops.state = FarmController.states.idle;
+            currentResources = maxResources;
         }
     }
 }

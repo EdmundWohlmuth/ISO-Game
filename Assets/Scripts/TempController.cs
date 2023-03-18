@@ -141,7 +141,8 @@ public class TempController : MonoBehaviour
     {
         if (PlacementCheck(x, z) && building)
         {
-            dummyObject.AddComponent<MeshCollider>();
+            dummyObject.AddComponent<BoxCollider>();
+            dummyObject.GetComponent<BoxCollider>().size = new Vector3(2, 2, 2);
             Instantiate(dummyObject, new Vector3(x, 0.1f, z), transform.rotation);
             dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();           
             Destroy(dummyObject);
@@ -150,12 +151,7 @@ public class TempController : MonoBehaviour
             building = false;
         }
         else if (PlacementCheck(x, z) && tillingLand)
-        {
-          /*Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
-            GameObject grassToRemove = GameObject.Find("Grass: " + x + "," + z.ToString());
-            Destroy(grassToRemove);
-            Destroy(dummyObject);
-            dummyObject = null;*/        
+        {      
 
             for (int a = x - 1; a <= x + 1; a++)
             {

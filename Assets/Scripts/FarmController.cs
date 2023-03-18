@@ -12,6 +12,7 @@ public class FarmController : MonoBehaviour
     public bool harvested;
     public int foodAmmount;
     int totalFood = 60;
+    public ResourceNode node;
     [SerializeField] float currentTime;
     [SerializeField] float totalTime = 60;
 
@@ -26,6 +27,7 @@ public class FarmController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        node = GetComponentInChildren<ResourceNode>();
         state = states.idle;
 
         crops.SetActive(false);
@@ -38,6 +40,8 @@ public class FarmController : MonoBehaviour
         switch (state)
         {
             case states.idle:
+
+                crops.SetActive(false);
 
                 if (seeded)
                 {
@@ -58,6 +62,7 @@ public class FarmController : MonoBehaviour
                 {                    
                     seedlings.SetActive(false);
                     crops.SetActive(true);
+                    node = GetComponentInChildren<ResourceNode>();
                     currentTime = 0;
                     state = states.grown;
                 }
@@ -65,12 +70,6 @@ public class FarmController : MonoBehaviour
                 break;
 
             case states.grown:
-
-                if (foodAmmount <= 0)
-                {
-                    crops.SetActive(false);
-                    state = states.idle;
-                }
 
                 break;
 
