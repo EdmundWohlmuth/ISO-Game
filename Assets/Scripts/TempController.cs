@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using DG.Tweening;
 
 public class TempController : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class TempController : MonoBehaviour
 
         // camera movement
         Movement();
+        BuildingControl();
         CameraScroll();
 
         // raycast to curosr pos
@@ -49,6 +51,7 @@ public class TempController : MonoBehaviour
         {
             Destroy(dummyObject);
             dummyObject = null;
+            building = false;
         }
     }
 
@@ -59,6 +62,23 @@ public class TempController : MonoBehaviour
 
         horizontalSpeed = Input.GetAxis("Horizontal") * Time.deltaTime;
         transform.Translate(0, 0, horizontalSpeed * -8f);
+
+        if (Input.GetKeyDown(KeyCode.Q) && !DOTween.IsTweening(this))
+        {
+            this.transform.DOLocalRotate(new Vector3(0, 90f, 0), 3f).SetRelative();
+
+            /*transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
+                                                 dummyObject.transform.localRotation.y - 90,
+                                                 dummyObject.transform.localRotation.z));*/
+        }
+        else if (Input.GetKeyDown(KeyCode.E) && !DOTween.IsTweening(this))
+        {
+            this.transform.DORotate(new Vector3(0, -90f, 0), 3f).SetRelative();
+
+            /*transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
+                                                 dummyObject.transform.localRotation.y + 90,
+                                                 dummyObject.transform.localRotation.z));*/
+        }
     }
     void CameraScroll()
     {
@@ -105,7 +125,7 @@ public class TempController : MonoBehaviour
                 if (building || tillingLand) PlaceObj((int)worldPos.x, (int)worldPos.z);
             }
         }
-        else if (Physics.Raycast(ray, out hit))
+        else if (Physics.Raycast(ray, out hit)) // select character
         {
             //-SELECT-VILLAGER-----
             if (Input.GetMouseButtonDown(0) && building == false && tillingLand == false && VC == null)
@@ -132,8 +152,23 @@ public class TempController : MonoBehaviour
                     VC.isSelected = false;
                     VC = null;
                 }
-            }
-            
+            }            
+        }
+    }
+
+    void BuildingControl()
+    {
+        if (building && Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            dummyObject.transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
+                                                 dummyObject.transform.localRotation.y - 90,
+                                                 dummyObject.transform.localRotation.z));
+        }
+        else if (building && Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            dummyObject.transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
+                                                 dummyObject.transform.localRotation.y + 90,
+                                                 dummyObject.transform.localRotation.z));
         }
     }
 
@@ -143,7 +178,7 @@ public class TempController : MonoBehaviour
         {
             dummyObject.AddComponent<BoxCollider>();
             dummyObject.GetComponent<BoxCollider>().size = new Vector3(2, 2, 2);
-            Instantiate(dummyObject, new Vector3(x, 0.1f, z), transform.rotation);
+            Instantiate(dummyObject, new Vector3(x, 0.1f, z), dummyObject.transform.rotation);
             dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();           
             Destroy(dummyObject);
             dummyObject = null;
@@ -175,15 +210,6 @@ public class TempController : MonoBehaviour
     {
         if (randGen.GetSurroundingTileCount(x, z, worldMap) == 8 &&
         randGen.GetSurroundingTileCount(x, z, clutterMap) == 0)
-        {
-            return true;
-        }
-        return false;
-    }
-    bool FarmCheck(int x, int z)
-    {
-        if (worldMap[x,z] == 1 &&
-        clutterMap[x, z] == 0)
         {
             return true;
         }

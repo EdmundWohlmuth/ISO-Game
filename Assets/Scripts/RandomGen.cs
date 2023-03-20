@@ -152,7 +152,7 @@ public class RandomGen : MonoBehaviour
                         tileToAdd.AddComponent<MeshCollider>();
                         tileToAdd.AddComponent<ResourceNode>();
                         tileToAdd.GetComponent<ResourceNode>().resource = 0;
-                        tileToAdd.GetComponent<ResourceNode>().maxResources = 160;
+                        tileToAdd.GetComponent<ResourceNode>().maxResources = 120;
                         tileToAdd.GetComponent<ResourceNode>().gen = this;
                         tileToAdd.GetComponent<ResourceNode>().x = x;
                         tileToAdd.GetComponent<ResourceNode>().y = y;
@@ -166,7 +166,7 @@ public class RandomGen : MonoBehaviour
                         tileToAdd.AddComponent<MeshCollider>();
                         tileToAdd.AddComponent<ResourceNode>();
                         tileToAdd.GetComponent<ResourceNode>().resource = 0;
-                        tileToAdd.GetComponent<ResourceNode>().maxResources = 160;
+                        tileToAdd.GetComponent<ResourceNode>().maxResources = 120;
                         tileToAdd.GetComponent<ResourceNode>().gen = this;
                         tileToAdd.GetComponent<ResourceNode>().x = x;
                         tileToAdd.GetComponent<ResourceNode>().y = y;

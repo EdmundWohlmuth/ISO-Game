@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class ResourceNode : MonoBehaviour
 {
@@ -31,7 +32,9 @@ public class ResourceNode : MonoBehaviour
         //if (currentResources <= (currentResources -= 20)) return;
 
         currentResources -= decrimentValue;
-        Debug.Log("resources left: " + currentResources);
+        this.gameObject.transform.DOShakeRotation(0.2f, 5f, 1, 90);
+
+        //Debug.Log("resources left: " + currentResources);
 
         if (currentResources <= 0 && resource != resourceType.food)
         {
@@ -41,7 +44,7 @@ public class ResourceNode : MonoBehaviour
         else if ((currentResources <= 0 && resource == resourceType.food))
         {
             Debug.Log("farming done");
-           crops.state = FarmController.states.idle;
+            crops.state = FarmController.states.idle;
             currentResources = maxResources;
         }
     }
