@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class VillagerController : MonoBehaviour
 {
     [Header("Refrences")]
+    [SerializeField] GameObject visual;
     [SerializeField] NavMeshAgent agent;
     public Camera cam;   
     public TempController controller;
@@ -34,6 +35,19 @@ public class VillagerController : MonoBehaviour
     public currentResource resource;
     public bool isSelected;
 
+    [Header("Moving")]
+    [SerializeField] float movingSpeed = 2f;
+    [SerializeField] float movingHeight = 1f;
+    [SerializeField] float movingHeightAmplitude = 0.1f;
+    [SerializeField] float currentMovingHeight;
+
+    [Header("Inidcation")]
+    [SerializeField] float indicatorHeight = 0.3f;
+    [SerializeField] float indicatorHeightAmplitude = 0.1f;
+    [SerializeField] float indicatorSpeed = 6f;
+    [SerializeField] Mesh indicatior;
+    [SerializeField] Material indicatorMat;
+
     [Header("Resource colletion")]
     [SerializeField] int harvestValue = 2;
     [SerializeField] int carryCapacity = 20;
@@ -59,7 +73,25 @@ public class VillagerController : MonoBehaviour
     void Update()
     {
         PlayerInput();
+        Indicator();
         StateController();
+    }
+
+    void Indicator()
+    {
+        if (isSelected)
+        {
+            Graphics.DrawMesh(indicatior, transform.position + 
+                new Vector3(0, indicatorHeight + Mathf.Abs(indicatorHeight + Mathf.Sin(Time.time * indicatorSpeed) * indicatorHeightAmplitude),
+                0), transform.rotation, indicatorMat, 6);
+        }
+
+        if (agent.hasPath)
+        {
+            Graphics.DrawMesh(indicatior, agent.destination +
+            new Vector3(0, indicatorHeight + Mathf.Abs(indicatorHeight + Mathf.Sin(Time.time * indicatorSpeed) * indicatorHeightAmplitude),
+            0), transform.rotation, indicatorMat, 6);          
+        }
     }
 
     void PlayerInput()

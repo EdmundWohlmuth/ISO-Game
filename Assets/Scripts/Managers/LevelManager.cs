@@ -7,6 +7,12 @@ public class LevelManager : MonoBehaviour
 {
     public void LoadGameplay()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
+        GameManager.gameManager.Reset();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();      
     }
 }

@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class TempController : MonoBehaviour
 {
+    static TempController tempController;
+
     float verticalSpeed = 15f;
     float horizontalSpeed = 15f;
     Camera cam;
@@ -30,7 +32,7 @@ public class TempController : MonoBehaviour
         cam = Camera.main;
         dummyObject = Instantiate(dummyObject, transform.position, transform.rotation);
         dummyObject.name = "TownHall";
-        building = true;
+        building = true;        
     }
 
     // Update is called once per frame
@@ -63,7 +65,7 @@ public class TempController : MonoBehaviour
         horizontalSpeed = Input.GetAxis("Horizontal") * Time.deltaTime;
         transform.Translate(0, 0, horizontalSpeed * -8f);
 
-        if (Input.GetKeyDown(KeyCode.Q) && !DOTween.IsTweening(this))
+        if (Input.GetKeyDown(KeyCode.Q) && !DOTween.IsTweening(this.transform))
         {
             this.transform.DOLocalRotate(new Vector3(0, 90f, 0), 3f).SetRelative();
 
@@ -71,7 +73,7 @@ public class TempController : MonoBehaviour
                                                  dummyObject.transform.localRotation.y - 90,
                                                  dummyObject.transform.localRotation.z));*/
         }
-        else if (Input.GetKeyDown(KeyCode.E) && !DOTween.IsTweening(this))
+        else if (Input.GetKeyDown(KeyCode.E) && !DOTween.IsTweening(this.transform))
         {
             this.transform.DORotate(new Vector3(0, -90f, 0), 3f).SetRelative();
 
@@ -109,14 +111,17 @@ public class TempController : MonoBehaviour
         mousePos.z = 0f;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        RaycastHit hit;      
 
         if (Physics.Raycast(ray, out hit) && dummyObject != null) // show building placement
         {
             Vector3 worldPos = new Vector3(hit.point.x, 0.4f, hit.point.z);
-            worldPos = Vector3Int.FloorToInt(worldPos);     
+            worldPos = Vector3Int.FloorToInt(worldPos);
+
+            bool canPlace = PlacementCheck((int)worldPos.x, (int)worldPos.z);
 
             dummyObject.transform.position = Vector3Int.FloorToInt(worldPos);
+            if (dummyObject.layer != (canPlace ? 9 : 10)) dummyObject.SetLayerRecursively(canPlace ? 9 : 10);
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -176,18 +181,20 @@ public class TempController : MonoBehaviour
     {
         if (PlacementCheck(x, z) && building)
         {
+            dummyObject.SetLayerRecursively(0);
             dummyObject.AddComponent<BoxCollider>();
             dummyObject.GetComponent<BoxCollider>().size = new Vector3(2, 2, 2);
             Instantiate(dummyObject, new Vector3(x, 0.1f, z), dummyObject.transform.rotation);
-            dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();           
+            dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();    
+            
             Destroy(dummyObject);
             dummyObject = null;
 
             building = false;
         }
         else if (PlacementCheck(x, z) && tillingLand)
-        {      
-
+        {
+            dummyObject.SetLayerRecursively(0);
             for (int a = x - 1; a <= x + 1; a++)
             {
                 for (int b = z - 1; b <= z + 1; b++)
@@ -197,7 +204,7 @@ public class TempController : MonoBehaviour
                 }
             }
 
-            Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
+            var newObj = Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
 
             Destroy(dummyObject);
             dummyObject = null;
@@ -227,4 +234,23 @@ public class TempController : MonoBehaviour
         dummyObject = Instantiate(farm, transform.position, transform.rotation);
         tillingLand = true;
     }
+
+    // ------------------SET-LAYER-RECURSIVLY-------------
 }
+
+public static class extensionMeathods
+{
+    public static void SetLayerRecursively(this GameObject obj, int newLayer)
+    {
+        if (null == obj)
+            return;
+        obj.layer = newLayer;
+        foreach (Transform child in obj.transform)
+        {
+            if (null == child)
+                continue;
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
+    }
+}
+
