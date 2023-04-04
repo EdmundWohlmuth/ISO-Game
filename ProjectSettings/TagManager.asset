@@ -10,6 +10,7 @@ TagManager:
   - food
   - farm
   - townhall
+  - house
   layers:
   - Default
   - TransparentFX

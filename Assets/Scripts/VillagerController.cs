@@ -28,7 +28,9 @@ public class VillagerController : MonoBehaviour
         miningStone,
         harvestingCrops,
         dropSupplies,
-        planting
+        planting,
+        building,
+        collecting
     }
     [Header("states")]
     public playerState state;
@@ -51,7 +53,7 @@ public class VillagerController : MonoBehaviour
     [Header("Resource colletion")]
     [SerializeField] int harvestValue = 2;
     [SerializeField] int carryCapacity = 20;
-    [SerializeField] float harvestTime = 5;
+    [SerializeField] float harvestTime = 3;
     float maxHarvestTime = 5;
     [SerializeField] int collected;
     int woodCollectionAmmount = 5;
@@ -105,7 +107,18 @@ public class VillagerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.tag == "tree" && collected == 0 || hit.transform.tag == "tree" && resource == currentResource.wood)
+                if (hit.transform.tag == "townhall")
+                {
+                    //Debug.Log("return");
+                    Return();
+                }
+                else if (hit.transform.tag == "ground")
+                {
+                    //Debug.Log("moving");
+                    agent.SetDestination(hit.point);
+                    state = playerState.walking;
+                }
+                else if (hit.transform.tag == "tree" && collected == 0 || hit.transform.tag == "tree" && resource == currentResource.wood)
                 {
                     //Debug.Log("chop");
                     // harvest
@@ -139,16 +152,11 @@ public class VillagerController : MonoBehaviour
                     harvestValue = foodCollectionAmmount;
                     // farm
                 }
-                else if (hit.transform.tag == "townhall")
+                else if (hit.transform.tag == "house" && hit.transform.gameObject.GetComponent<CreationManager>())
                 {
-                    //Debug.Log("return");
-                    Return();
-                }
-                else if (hit.transform.tag == "ground")
-                {
-                    //Debug.Log("moving");
-                    agent.SetDestination(hit.point);
-                    state = playerState.walking;
+                    agent.SetDestination(hit.transform.position);
+                    state = playerState.building;
+                    resource = currentResource.wood;
                 }
 
                 if (state != playerState.walking)
@@ -226,6 +234,50 @@ public class VillagerController : MonoBehaviour
                 }
 
                 break;
+
+            case playerState.building:
+
+                if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1.4)
+                {
+                    if (currentNode.GetComponent<CreationManager>().currentResources >= currentNode.GetComponent<CreationManager>().requiredWood) return;
+
+                    if (collected == 0)
+                    {
+                        state = playerState.collecting;
+                        Return();
+                    }
+                    else if (GenaricTimer(3))
+                    {
+                        Debug.Log("depositing: " + woodCollectionAmmount);
+                        currentNode.GetComponent<CreationManager>().DeliverResources(woodCollectionAmmount);
+                        collected -= woodCollectionAmmount;
+                    }                   
+                }
+
+                break;
+
+            case playerState.collecting:
+
+                if (Vector3.Distance(gameObject.transform.position, townHall.transform.position) <= 2.35f)
+                {
+                    // gather stuff
+                    if (collected == carryCapacity)
+                    {
+                        agent.SetDestination(currentNode.transform.position);
+                        state = playerState.building;
+                    }
+                    else if (currentNode.GetComponent<CreationManager>().currentResources <= currentNode.GetComponent<CreationManager>().requiredWood)
+                    {
+                        if (GenaricTimer(1))
+                        {
+                            collected += woodCollectionAmmount;
+                            GameManager.gameManager.woodPool -= woodCollectionAmmount;
+                        }
+                    }
+                    else state = playerState.walking;
+                }
+
+                break;
         }
     }
 
@@ -290,16 +342,18 @@ public class VillagerController : MonoBehaviour
         }
     }
 
-    bool GenaricTimer()
+    bool GenaricTimer(int time)
     {
         if (harvestTime <= 0)
         {           
-            harvestTime = maxHarvestTime;
+            harvestTime = time;
+            //Debug.Log(harvestTime);
             return true;
         }
         else
-        {
+        {            
             harvestTime -= Time.deltaTime;
+            //Debug.Log(harvestTime);
             return false;
         }
     }

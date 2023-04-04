@@ -1239,9 +1239,10 @@ GameObject:
   m_Component:
   - component: {fileID: 520232102}
   - component: {fileID: 520232103}
+  - component: {fileID: 520232104}
   m_Layer: 0
   m_Name: House
-  m_TagString: Untagged
+  m_TagString: house
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1255,7 +1256,7 @@ Transform:
   m_GameObject: {fileID: 520232101}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 152.33438}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1438267962}
@@ -1278,6 +1279,23 @@ MonoBehaviour:
   ammount: 1
   cam: {fileID: 963194227}
   player: {fileID: 534797939}
+--- !u!114 &520232104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520232101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d6d4f47d566b94439dfe5134b1575c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  refrence: {fileID: 1438267972}
+  currentResources: 0
+  requiredWood: 60
+  requiredStone: 0
+  progress: 0
 --- !u!1 &534797934
 GameObject:
   m_ObjectHideFlags: 0
@@ -3656,6 +3674,11 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: -1.0840001, y: 4.8430004, z: 0.025}
   m_TimeToStationary: 0.5
+--- !u!23 &1438267972 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 23228858995858358, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
+  m_PrefabInstance: {fileID: 1492481733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1449543696
 GameObject:
   m_ObjectHideFlags: 0
@@ -3851,9 +3874,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: rpgpp_lt_building_03
       objectReference: {fileID: 0}
+    - target: {fileID: 1232766363669618, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
+      propertyPath: m_TagString
+      value: house
+      objectReference: {fileID: 0}
     - target: {fileID: 4998326679312090, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4998326679312090, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4998326679312090, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4998326679312090, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 4998326679312090, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3895,7 +3934,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -6452074477188826285, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
+    - {fileID: 7271850286768431691, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2b519101e10d4a74580d4c86ac9e03e6, type: 3}
 --- !u!1 &1521962324
 GameObject:

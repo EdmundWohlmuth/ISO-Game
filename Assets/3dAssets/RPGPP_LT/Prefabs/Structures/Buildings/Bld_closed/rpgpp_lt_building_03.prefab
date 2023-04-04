@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 4998326679312090}
   - component: {fileID: 33589651207640336}
   - component: {fileID: 23228858995858358}
-  - component: {fileID: -6452074477188826285}
+  - component: {fileID: 7271850286768431691}
   m_Layer: 0
   m_Name: rpgpp_lt_building_03
-  m_TagString: Untagged
+  m_TagString: house
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-6452074477188826285
+--- !u!114 &7271850286768431691
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,10 +93,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1232766363669618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c204e4d86916f74980bcbb58dcd92b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d6d4f47d566b94439dfe5134b1575c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  villager: {fileID: 2049625204821369922, guid: 00a6a18a6ce8bd04e80ba4a33ede9f2a, type: 3}
-  ammount: 1
-  cam: {fileID: 0}
-  player: {fileID: 0}
+  refrence: {fileID: 0}
+  currentResources: 0
+  requiredWood: 60
+  requiredStone: 0
+  progress: 0
