@@ -2403,7 +2403,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1623
+    m_Bits: 1751
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3308,6 +3308,8 @@ MonoBehaviour:
   woodPool: 0
   stonePool: 0
   foodPool: 0
+  ProgressMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  ProgressMat: {fileID: 2100000, guid: de20ddf65f91c5849acdaea99da0b9ab, type: 2}
 --- !u!114 &1189787011
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,21 +17,20 @@ public class CreationManager : MonoBehaviour
         progress = 0;
     }
 
-    void Progress()
+    private void Update()
     {
-        if (currentResources == requiredWood)
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-        //Debug.Log("Progress = " + progress);
-        
+        GameManager.gameManager.DisplayPorgress(transform.position, 0.75f, progress);
     }
     public void DeliverResources(int addedResources)
     {
-        currentResources += addedResources;        
-        float progressMade = currentResources / requiredWood;
-        progress += progressMade; 
+        
 
-        Progress();
+        currentResources += addedResources;
+        progress = Mathf.InverseLerp(0, requiredWood, currentResources);
+        float progressMade = currentResources / requiredWood;
+        progress += progressMade;
+        transform.localScale = new Vector3(1, progress, 1);
+
+
     }
 }

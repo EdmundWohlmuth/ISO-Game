@@ -85,14 +85,14 @@ public class VillagerController : MonoBehaviour
         {
             Graphics.DrawMesh(indicatior, transform.position + 
                 new Vector3(0, indicatorHeight + Mathf.Abs(indicatorHeight + Mathf.Sin(Time.time * indicatorSpeed) * indicatorHeightAmplitude),
-                0), transform.rotation, indicatorMat, 6);
+                0), transform.rotation, indicatorMat, 7);
         }
 
         if (agent.hasPath)
         {
             Graphics.DrawMesh(indicatior, agent.destination +
             new Vector3(0, indicatorHeight + Mathf.Abs(indicatorHeight + Mathf.Sin(Time.time * indicatorSpeed) * indicatorHeightAmplitude),
-            0), transform.rotation, indicatorMat, 6);          
+            0), transform.rotation, indicatorMat, 7);          
         }
     }
 
@@ -339,6 +339,7 @@ public class VillagerController : MonoBehaviour
         else
         {
             harvestTime -= Time.deltaTime;
+            GameManager.gameManager.DisplayPorgress(transform.position, 0.75f, Mathf.InverseLerp(maxHarvestTime, 0, harvestTime));
         }
     }
 
