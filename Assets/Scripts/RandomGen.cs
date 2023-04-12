@@ -17,6 +17,9 @@ public class RandomGen : MonoBehaviour
     [SerializeField] string seed;
     [SerializeField] [Range(0, 100)] int fillPercent;
 
+    [Header("Resource Values")]
+    [SerializeField] int treeAmmount = 90;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -152,7 +155,7 @@ public class RandomGen : MonoBehaviour
                         tileToAdd.AddComponent<MeshCollider>();
                         tileToAdd.AddComponent<ResourceNode>();
                         tileToAdd.GetComponent<ResourceNode>().resource = 0;
-                        tileToAdd.GetComponent<ResourceNode>().maxResources = 120;
+                        tileToAdd.GetComponent<ResourceNode>().maxResources = treeAmmount;
                         tileToAdd.GetComponent<ResourceNode>().gen = this;
                         tileToAdd.GetComponent<ResourceNode>().x = x;
                         tileToAdd.GetComponent<ResourceNode>().y = y;
@@ -166,7 +169,7 @@ public class RandomGen : MonoBehaviour
                         tileToAdd.AddComponent<MeshCollider>();
                         tileToAdd.AddComponent<ResourceNode>();
                         tileToAdd.GetComponent<ResourceNode>().resource = 0;
-                        tileToAdd.GetComponent<ResourceNode>().maxResources = 120;
+                        tileToAdd.GetComponent<ResourceNode>().maxResources = treeAmmount;
                         tileToAdd.GetComponent<ResourceNode>().gen = this;
                         tileToAdd.GetComponent<ResourceNode>().x = x;
                         tileToAdd.GetComponent<ResourceNode>().y = y;
@@ -175,6 +178,24 @@ public class RandomGen : MonoBehaviour
                     else clutterMap[x, y] = 0;
 
 
+                }
+            }
+        }
+    }
+
+    //-SET-WORLD-VALUES
+    public void SetOccupied(int mapX, int mapY)
+    {
+        for (int x = mapX - 1; x <= mapX + 1; x++)
+        {
+            for (int y = mapY - 1; y <= mapY + 1; y++)
+            {
+                if (x >= 0 && x < height && y >= 0 && y < depth)
+                {
+                    if (x != mapX || y != mapY)
+                    {
+                        clutterMap[mapX, mapX] = 1;
+                    }
                 }
             }
         }

@@ -185,10 +185,11 @@ public class TempController : MonoBehaviour
             dummyObject.AddComponent<BoxCollider>();
             dummyObject.GetComponent<BoxCollider>().size = new Vector3(2, 2, 2);
             Instantiate(dummyObject, new Vector3(x, 0.1f, z), dummyObject.transform.rotation);
-            dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();    
+            if (dummyObject.name == "TownHall") dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();    
             
             Destroy(dummyObject);
             dummyObject = null;
+            randGen.SetOccupied(x, z);
 
             building = false;
         }
@@ -208,9 +209,11 @@ public class TempController : MonoBehaviour
 
             Destroy(dummyObject);
             dummyObject = null;
+            randGen.SetOccupied(x, z);
 
             tillingLand = false;
         }
+
     }
 
     bool PlacementCheck(int x, int z)

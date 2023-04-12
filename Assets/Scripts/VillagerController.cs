@@ -339,7 +339,7 @@ public class VillagerController : MonoBehaviour
         else
         {
             harvestTime -= Time.deltaTime;
-            GameManager.gameManager.DisplayPorgress(transform.position, 0.75f, Mathf.InverseLerp(maxHarvestTime, 0, harvestTime));
+            GameManager.gameManager.DisplayProgress(agent.transform.position, 0.75f, Mathf.InverseLerp(maxHarvestTime, 0, harvestTime));
         }
     }
 
