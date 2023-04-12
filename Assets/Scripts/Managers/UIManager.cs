@@ -74,11 +74,13 @@ public class UIManager : MonoBehaviour
         if (constructionOpen)
         {
             constructionOpen = false;
+            decorButton.SetActive(true);
             constButton.transform.position = new Vector3(30f, 0, 0);
         }
         else
         {
             constructionOpen = true;
+            decorButton.SetActive(false);
             constButton.transform.position = new Vector3(30f, 190, 0);
         }
     }

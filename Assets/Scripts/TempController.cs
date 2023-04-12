@@ -19,7 +19,9 @@ public class TempController : MonoBehaviour
 
     [Header("Build Objects")]
     public GameObject house;
-    [SerializeField] bool building;
+    public GameObject bridge;
+    [SerializeField] bool bridging;
+    [SerializeField] bool buildingHouse;
     public GameObject farm;
     [SerializeField] bool tillingLand;
 
@@ -32,7 +34,7 @@ public class TempController : MonoBehaviour
         cam = Camera.main;
         dummyObject = Instantiate(dummyObject, transform.position, transform.rotation);
         dummyObject.name = "TownHall";
-        building = true;        
+        buildingHouse = true;        
     }
 
     // Update is called once per frame
@@ -53,7 +55,7 @@ public class TempController : MonoBehaviour
         {
             Destroy(dummyObject);
             dummyObject = null;
-            building = false;
+            buildingHouse = false;
             tillingLand = false;
         }
     }
@@ -69,18 +71,10 @@ public class TempController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q) && !DOTween.IsTweening(this.transform))
         {
             this.transform.DOLocalRotate(new Vector3(0, 90f, 0), 3f).SetRelative();
-
-            /*transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
-                                                 dummyObject.transform.localRotation.y - 90,
-                                                 dummyObject.transform.localRotation.z));*/
         }
         else if (Input.GetKeyDown(KeyCode.E) && !DOTween.IsTweening(this.transform))
         {
             this.transform.DORotate(new Vector3(0, -90f, 0), 3f).SetRelative();
-
-            /*transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
-                                                 dummyObject.transform.localRotation.y + 90,
-                                                 dummyObject.transform.localRotation.z));*/
         }
     }
     void CameraScroll()
@@ -128,13 +122,13 @@ public class TempController : MonoBehaviour
             {
                 worldPos = Vector3Int.FloorToInt(worldPos);
                 //-PLACEMENT-----------
-                if (building || tillingLand) PlaceObj((int)worldPos.x, (int)worldPos.z);
+                if (buildingHouse || tillingLand) PlaceObj((int)worldPos.x, (int)worldPos.z);
             }
         }
         else if (Physics.Raycast(ray, out hit)) // select character
         {
             //-SELECT-VILLAGER-----
-            if (Input.GetMouseButtonDown(0) && building == false && tillingLand == false && VC == null)
+            if (Input.GetMouseButtonDown(0) && buildingHouse == false && tillingLand == false && VC == null)
             {
                 if (hit.transform.tag == "villager")
                 {
@@ -143,7 +137,7 @@ public class TempController : MonoBehaviour
                     VC.isSelected = true;
                 }
             }
-            else if(Input.GetMouseButtonDown(0) && building == false && tillingLand == false && VC != null)
+            else if(Input.GetMouseButtonDown(0) && buildingHouse == false && tillingLand == false && VC != null)
             {
                 if (hit.transform.tag == "villager")
                 {
@@ -164,13 +158,13 @@ public class TempController : MonoBehaviour
 
     void BuildingControl()
     {
-        if (building && Input.GetKeyDown(KeyCode.LeftBracket))
+        if (buildingHouse && Input.GetKeyDown(KeyCode.LeftBracket))
         {
             dummyObject.transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
                                                  dummyObject.transform.localRotation.y - 90,
                                                  dummyObject.transform.localRotation.z));
         }
-        else if (building && Input.GetKeyDown(KeyCode.RightBracket))
+        else if (buildingHouse && Input.GetKeyDown(KeyCode.RightBracket))
         {
             dummyObject.transform.Rotate(new Vector3(dummyObject.transform.localRotation.x,
                                                  dummyObject.transform.localRotation.y + 90,
@@ -180,7 +174,7 @@ public class TempController : MonoBehaviour
 
     void PlaceObj(int x, int z) // place building
     {
-        if (PlacementCheck(x, z) && building)
+        if (PlacementCheck(x, z) && buildingHouse)
         {
             dummyObject.SetLayerRecursively(0);
             dummyObject.AddComponent<BoxCollider>();
@@ -192,7 +186,7 @@ public class TempController : MonoBehaviour
             dummyObject = null;
             randGen.SetOccupied(x, z);
 
-            building = false;
+            buildingHouse = false;
         }
         else if (PlacementCheck(x, z) && tillingLand)
         {
@@ -214,6 +208,13 @@ public class TempController : MonoBehaviour
 
             tillingLand = false;
         }
+        else if (randGen.tileMap[x,z] == 0 && bridging)
+        {
+            dummyObject.SetLayerRecursively(0);
+            dummyObject.AddComponent<MeshCollider>();
+            Instantiate(dummyObject, new Vector3(x, 0.1f, z), dummyObject.transform.rotation);
+            bridging = false;
+        }
 
     }
 
@@ -231,12 +232,17 @@ public class TempController : MonoBehaviour
     public void PlaceHouse()
     {
         dummyObject = Instantiate(house, transform.position, transform.rotation);
-        building = true;
+        buildingHouse = true;
     }
     public void PlaceFarm()
     {
         dummyObject = Instantiate(farm, transform.position, transform.rotation);
         tillingLand = true;
+    }
+    public void PlaceBridge()
+    {
+        dummyObject = Instantiate(bridge, transform.position, transform.rotation);
+        bridging = true;
     }
 
     // ------------------SET-LAYER-RECURSIVLY-------------
