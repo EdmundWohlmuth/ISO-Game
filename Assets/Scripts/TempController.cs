@@ -54,6 +54,7 @@ public class TempController : MonoBehaviour
             Destroy(dummyObject);
             dummyObject = null;
             building = false;
+            tillingLand = false;
         }
     }
 

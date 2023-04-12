@@ -107,22 +107,32 @@ public class RandomGen : MonoBehaviour
             {
                 if (resourceMap[x,y] == 1 && tileMap[x,y] == 1)
                 {
-                    if (Random.Range(0,3) < 2) tileToAdd = Instantiate(tile[2], new Vector3(x, 0, y), transform.rotation);
-                    else tileToAdd = Instantiate(tile[3], new Vector3(x, 0, y), transform.rotation);
-
-                    tileToAdd.transform.parent = this.gameObject.transform;
-                    tileToAdd.name = "Tree: " + x + "," + y.ToString();
-                    tileToAdd.tag = "tree";
-                    tileToAdd.AddComponent<MeshCollider>();
-                    tileToAdd.AddComponent<ResourceNode>();
-                    tileToAdd.GetComponent<ResourceNode>().resource = 0;
-                    tileToAdd.GetComponent<ResourceNode>().maxResources = woodAmmount;
-                    tileToAdd.GetComponent<ResourceNode>().gen = this;
-                    tileToAdd.GetComponent<ResourceNode>().x = x;
-                    tileToAdd.GetComponent<ResourceNode>().y = y;
+                    if (Random.Range(0, 10) < 2)
+                    {
+                        tileToAdd = Instantiate(tile[2], new Vector3(x, 0, y), transform.rotation);
+                        CreateTree(x, y);
+                    }
+                    else if (Random.Range(0, 10) < 3)
+                    {
+                        tileToAdd = Instantiate(tile[3], new Vector3(x, 0, y), transform.rotation);
+                        CreateTree(x, y);
+                    }
                 }
             }
         }
+    }
+    void CreateTree(int x, int y)
+    {
+        tileToAdd.transform.parent = this.gameObject.transform;
+        tileToAdd.name = "Tree: " + x + "," + y.ToString();
+        tileToAdd.tag = "tree";
+        tileToAdd.AddComponent<MeshCollider>();
+        tileToAdd.AddComponent<ResourceNode>();
+        tileToAdd.GetComponent<ResourceNode>().resource = 0;
+        tileToAdd.GetComponent<ResourceNode>().maxResources = woodAmmount;
+        tileToAdd.GetComponent<ResourceNode>().gen = this;
+        tileToAdd.GetComponent<ResourceNode>().x = x;
+        tileToAdd.GetComponent<ResourceNode>().y = y;
     }
 
     void SmoothMap(int[,] map)
