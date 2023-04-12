@@ -38,7 +38,7 @@ public class ResourceNode : MonoBehaviour
 
         if (currentResources <= 0 && resource != resourceType.food)
         {
-            gen.clutterMap[x, y] = 0;
+            gen.resourceMap[x, y] = 0;
             Destroy(gameObject);
         }
         else if ((currentResources <= 0 && resource == resourceType.food))

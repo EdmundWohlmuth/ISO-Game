@@ -39,7 +39,7 @@ public class TempController : MonoBehaviour
     void Update()
     {
         worldMap = randGen.tileMap;
-        clutterMap = randGen.clutterMap;
+        clutterMap = randGen.resourceMap;
 
         // camera movement
         Movement();

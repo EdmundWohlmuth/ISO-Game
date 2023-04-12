@@ -9,16 +9,19 @@ public class RandomGen : MonoBehaviour
     public NavMeshSurface surface;
     GameObject tileToAdd;
     public int[,] tileMap;
-    public int[,] clutterMap;
+    public int[,] resourceMap;
     public int smoothAmmount;
 
+    [Header("Generation Values")]
     [SerializeField] int height;
     [SerializeField] int depth;
     [SerializeField] string seed;
     [SerializeField] [Range(0, 100)] int fillPercent;
+    [SerializeField] [Range(0, 100)] int resourceFillPercent;
+    [SerializeField] int clutterAmmount;
 
     [Header("Resource Values")]
-    [SerializeField] int treeAmmount = 90;
+    [SerializeField] int woodAmmount = 90;
 
     // Start is called before the first frame update
     void Start()
@@ -38,14 +41,21 @@ public class RandomGen : MonoBehaviour
     void GenMap()
     {
         tileMap = new int[height, depth];
-        clutterMap = new int[height, depth];
+        resourceMap = new int[height, depth];
         FillMap();
         for (int i = 0; i < smoothAmmount; i++)
         {
-            SmoothMap();
+            SmoothMap(tileMap);
         }
         GenerateMap();
-        SetClutter();
+
+        SetTrees();
+        for (int i = 0; i < smoothAmmount; i++)
+        {
+            SmoothMap(resourceMap);
+        }
+        GenerateClutter();
+
     }
 
     void FillMap() // First Pass, randomly sets values to tiles
@@ -60,13 +70,13 @@ public class RandomGen : MonoBehaviour
                 if (x == 0 || x == height - 1 || y == 0 || y == depth - 1) // encourages empty edges
                 {
                     tileToAdd = null; 
-                    tileMap[x, y] = 1;
+                    tileMap[x, y] = 0;
                 }
                 else if (randomNum.Next(0, 100) > fillPercent)
                 {                   
-                    tileMap[x, y] = 0;
+                    tileMap[x, y] = 1;
                 }
-                else tileMap[x, y] = 1;
+                else tileMap[x, y] = 0;
             }
         }
     }
@@ -89,20 +99,46 @@ public class RandomGen : MonoBehaviour
         }
     }
 
-    void SmoothMap()
+    void GenerateClutter()
     {
         for (int x = 0; x < height - 1; x++)
         {
             for (int y = 0; y < depth - 1; y++)
             {
-                int nearbyTiles = GetSurroundingTileCount(x, y, tileMap);
+                if (resourceMap[x,y] == 1 && tileMap[x,y] == 1)
+                {
+                    if (Random.Range(0,3) < 2) tileToAdd = Instantiate(tile[2], new Vector3(x, 0, y), transform.rotation);
+                    else tileToAdd = Instantiate(tile[3], new Vector3(x, 0, y), transform.rotation);
+
+                    tileToAdd.transform.parent = this.gameObject.transform;
+                    tileToAdd.name = "Tree: " + x + "," + y.ToString();
+                    tileToAdd.tag = "tree";
+                    tileToAdd.AddComponent<MeshCollider>();
+                    tileToAdd.AddComponent<ResourceNode>();
+                    tileToAdd.GetComponent<ResourceNode>().resource = 0;
+                    tileToAdd.GetComponent<ResourceNode>().maxResources = woodAmmount;
+                    tileToAdd.GetComponent<ResourceNode>().gen = this;
+                    tileToAdd.GetComponent<ResourceNode>().x = x;
+                    tileToAdd.GetComponent<ResourceNode>().y = y;
+                }
+            }
+        }
+    }
+
+    void SmoothMap(int[,] map)
+    {
+        for (int x = 0; x < height - 1; x++)
+        {
+            for (int y = 0; y < depth - 1; y++)
+            {
+                int nearbyTiles = GetSurroundingTileCount(x, y, map);
                 if (nearbyTiles > 4)
                 {
-                    tileMap[x, y] = 1;
+                    map[x, y] = 1;
                 }
                 else if (nearbyTiles < 4)
                 {
-                    tileMap[x, y] = 0;
+                    map[x, y] = 0;
                 }
             }
         }
@@ -139,45 +175,52 @@ public class RandomGen : MonoBehaviour
     }
     
     //-POPULATE MAP---------------
+    void SetTrees()
+    {
+        System.Random randomNum = new System.Random(seed.GetHashCode()/2);
+
+        for (int x = 0; x < height - 1; x++)
+        {
+            for (int y = 0; y < depth - 1; y++)
+            {
+                //Debug.Log(x + ", " + y);
+                if (x == 0 || x == height - 1 || y == 0 || y == depth - 1) // encourages empty edges
+                {
+                    tileToAdd = null;
+                    resourceMap[x, y] = 0;
+                }
+                else if (randomNum.Next(0, 100) > resourceFillPercent)
+                {
+                    resourceMap[x, y] = 1;
+                }
+                else resourceMap[x, y] = 0;
+            }
+        }
+    }
+
     void SetClutter() // probs should move this to its own thing, repeat the Cellualr process again to get clumps of trees
     {
         for (int x = 0; x < height - 1; x++)
         {
             for (int y = 0; y < depth - 1; y++)
             {
-                if (tileMap[x,y] == 1)
+                if (tileMap[x, y] == 1)
                 {
                     if (Random.Range(0, 50) < 2)
                     {
-                        tileToAdd = Instantiate(tile[2], new Vector3(x, 0, y), transform.rotation);
-                        tileToAdd.name = "Tree: " + x + "," + y.ToString();
-                        tileToAdd.tag = "tree";
-                        tileToAdd.AddComponent<MeshCollider>();
-                        tileToAdd.AddComponent<ResourceNode>();
-                        tileToAdd.GetComponent<ResourceNode>().resource = 0;
-                        tileToAdd.GetComponent<ResourceNode>().maxResources = treeAmmount;
-                        tileToAdd.GetComponent<ResourceNode>().gen = this;
-                        tileToAdd.GetComponent<ResourceNode>().x = x;
-                        tileToAdd.GetComponent<ResourceNode>().y = y;
-                        clutterMap[x, y] = 1;
+                        tileToAdd = Instantiate(tile[4], new Vector3(x, 0, y), transform.rotation);
+                        tileToAdd.name = "Plant: " + x + "," + y.ToString();
                     }
                     else if (Random.Range(0, 30) < 3)
                     {
-                        tileToAdd = Instantiate(tile[3], new Vector3(x, 0, y), transform.rotation);
-                        tileToAdd.name = "Tree: " + x + "," + y.ToString();
-                        tileToAdd.tag = "tree";
-                        tileToAdd.AddComponent<MeshCollider>();
-                        tileToAdd.AddComponent<ResourceNode>();
-                        tileToAdd.GetComponent<ResourceNode>().resource = 0;
-                        tileToAdd.GetComponent<ResourceNode>().maxResources = treeAmmount;
-                        tileToAdd.GetComponent<ResourceNode>().gen = this;
-                        tileToAdd.GetComponent<ResourceNode>().x = x;
-                        tileToAdd.GetComponent<ResourceNode>().y = y;
-                      clutterMap[x, y] = 1;
+                        tileToAdd = Instantiate(tile[5], new Vector3(x, 0, y), transform.rotation);
+                        tileToAdd.name = "Plant: " + x + "," + y.ToString();
                     }
-                    else clutterMap[x, y] = 0;
-
-
+                    else if (Random.Range(0, 30) < 4)
+                    {
+                        tileToAdd = Instantiate(tile[6], new Vector3(x, 0, y), transform.rotation);
+                        tileToAdd.name = "Plant: " + x + "," + y.ToString();
+                    }
                 }
             }
         }
@@ -194,7 +237,7 @@ public class RandomGen : MonoBehaviour
                 {
                     if (x != mapX || y != mapY)
                     {
-                        clutterMap[mapX, mapX] = 1;
+                        resourceMap[mapX, mapX] = 1;
                     }
                 }
             }
