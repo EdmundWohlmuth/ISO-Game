@@ -20,7 +20,8 @@ public class FarmController : MonoBehaviour
     {
         idle,
         growing,
-        grown
+        grown,
+        disabled
     }
     public states state;
 
@@ -28,7 +29,7 @@ public class FarmController : MonoBehaviour
     void Start()
     {
         node = GetComponentInChildren<ResourceNode>();
-        state = states.idle;
+        state = states.disabled;
 
         crops.SetActive(false);
         seedlings.SetActive(false);
@@ -70,7 +71,13 @@ public class FarmController : MonoBehaviour
                 break;
 
             case states.grown:
+                if (node.currentResources == 0)
+                {
+                    state = states.idle;
+                }
+                break;
 
+            case states.disabled:
                 break;
 
             default:

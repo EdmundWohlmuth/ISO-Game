@@ -106,23 +106,30 @@ public class TempController : MonoBehaviour
         mousePos.z = 0f;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;      
+        RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit) && dummyObject != null) // show building placement
         {
             Vector3 worldPos = new Vector3(hit.point.x, 0.4f, hit.point.z);
             worldPos = Vector3Int.FloorToInt(worldPos);
-
             bool canPlace = PlacementCheck((int)worldPos.x, (int)worldPos.z);
 
             dummyObject.transform.position = Vector3Int.FloorToInt(worldPos);
-            if (dummyObject.layer != (canPlace ? 9 : 10)) dummyObject.SetLayerRecursively(canPlace ? 9 : 10);
+            if (tillingLand || buildingHouse)
+            {
+                if (dummyObject.layer != (canPlace ? 9 : 10)) dummyObject.SetLayerRecursively(canPlace ? 9 : 10);
+            }
+            else if (bridging)
+            {
+                if (dummyObject.layer != (SingleTilePlacementCheckint((int)worldPos.x, (int)worldPos.z) ? 9 : 10)) dummyObject.SetLayerRecursively(canPlace ? 9 : 10);
+            }
+
 
             if (Input.GetMouseButtonDown(0))
             {
                 worldPos = Vector3Int.FloorToInt(worldPos);
                 //-PLACEMENT-----------
-                if (buildingHouse || tillingLand) PlaceObj((int)worldPos.x, (int)worldPos.z);
+                if (buildingHouse || tillingLand || bridging) PlaceObj((int)worldPos.x, (int)worldPos.z);
             }
         }
         else if (Physics.Raycast(ray, out hit)) // select character
@@ -184,7 +191,7 @@ public class TempController : MonoBehaviour
             
             Destroy(dummyObject);
             dummyObject = null;
-            randGen.SetOccupied(x, z);
+            //randGen.SetOccupied(x, z);
 
             buildingHouse = false;
         }
@@ -200,22 +207,27 @@ public class TempController : MonoBehaviour
                 }
             }
 
-            var newObj = Instantiate(dummyObject, new Vector3(x, -1f, z), transform.rotation);
+            var newObj = Instantiate(dummyObject, new Vector3(x, -0.5f, z), transform.rotation);
 
             Destroy(dummyObject);
             dummyObject = null;
-            randGen.SetOccupied(x, z);
+            //randGen.SetOccupied(x, z);
 
             tillingLand = false;
         }
-        else if (randGen.tileMap[x,z] == 0 && bridging)
+        else if (SingleTilePlacementCheckint(x,z) && bridging)
         {
             dummyObject.SetLayerRecursively(0);
-            dummyObject.AddComponent<MeshCollider>();
-            Instantiate(dummyObject, new Vector3(x, 0.1f, z), dummyObject.transform.rotation);
+            dummyObject.AddComponent<BoxCollider>();
+            var newObj = Instantiate(dummyObject, new Vector3(x, -0.4f, z), dummyObject.transform.rotation);
+            newObj.GetComponent<BoxCollider>().size = new Vector3(1, 0.4f, 1);
+            newObj.layer = 11;
+
+            Destroy(dummyObject);
+            dummyObject = null;
+
             bridging = false;
         }
-
     }
 
     bool PlacementCheck(int x, int z)
@@ -226,6 +238,11 @@ public class TempController : MonoBehaviour
             return true;
         }
         return false;
+    }
+    bool SingleTilePlacementCheckint(int x, int z)
+    {
+        if (randGen.tileMap[x, z] == 0) return true;
+        else return false;
     }
 
     //-BUILDING-SELECTION--------

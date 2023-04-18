@@ -1641,7 +1641,8 @@ MonoBehaviour:
   dummyObject: {fileID: 1449543696}
   house: {fileID: 520232101}
   bridge: {fileID: 919132148301326879}
-  building: 0
+  bridging: 0
+  buildingHouse: 0
   farm: {fileID: 3021115185799142912, guid: 8a43c2506078c4c41ad26e0190d492ca, type: 3}
   tillingLand: 0
   VC: {fileID: 0}
@@ -2648,7 +2649,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1751
+    m_Bits: 3799
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3513,7 +3514,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2048
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1

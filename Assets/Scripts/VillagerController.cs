@@ -232,6 +232,10 @@ public class VillagerController : MonoBehaviour
                         currentNode.GetComponent<FarmController>().seeded = true;
                     }
                 }
+                else if (currentNode.GetComponent<FarmController>().state == FarmController.states.disabled)
+                {
+                    state = playerState.building;
+                }
 
                 break;
 

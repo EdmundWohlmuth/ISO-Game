@@ -10,7 +10,7 @@ public class CreationManager : MonoBehaviour
     public int requiredWood;
     public int requiredStone;
     public float progress;
-    bool isDone;
+    public bool isDone;
 
 
     void Start()
@@ -21,11 +21,19 @@ public class CreationManager : MonoBehaviour
 
     private void Update()
     {
-        GameManager.gameManager.DisplayProgress(this.gameObject.transform.position, 1.75f, progress);
+        if (!isDone) GameManager.gameManager.DisplayProgress(this.gameObject.transform.position, 1.75f, progress);
 
         if (progress == 1 && !isDone)
         {
-            gameObject.GetComponent<SpawnVillagers>().SpawnVillager();
+            if (gameObject.GetComponent<SpawnVillagers>()) gameObject.GetComponent<SpawnVillagers>().SpawnVillager();
+            else if (gameObject.GetComponent<FarmController>())
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, -1f, gameObject.transform.position.z);
+                gameObject.gameObject.GetComponent<FarmController>().state = FarmController.states.idle;
+                gameObject.gameObject.GetComponent<FarmController>().seeded = true;
+            }
+            
+
             isDone = true;
         }
         

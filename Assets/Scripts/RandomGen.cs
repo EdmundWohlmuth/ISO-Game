@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.AI.Navigation;
+using UnityEngine.AI;
 
 public class RandomGen : MonoBehaviour
 {
@@ -29,6 +30,26 @@ public class RandomGen : MonoBehaviour
         seed = System.DateTime.Now.ToString();
         GenMap();
         surface.BuildNavMesh();
+    }
+
+    public void GenNavMesh()
+    {
+        // Create a new GameObject to represent the new walkable surface
+        GameObject surface = new GameObject("WalkableSurface");
+
+        // Create a NavMeshData object to hold the new walkable surface data
+        NavMeshData navMeshData = new NavMeshData();
+
+        // Collect the new walkable surface sources
+        NavMeshBuildSource navMeshBuildSource = new NavMeshBuildSource();
+        navMeshBuildSource.sourceObject = surface.GetComponent<MeshFilter>();
+        navMeshBuildSource.shape = NavMeshBuildSourceShape.Mesh;
+
+        // Build the new NavMesh data
+        //Broken->//NavMeshBuilder.BuildNavMeshData(navMeshBuildSource, NavMesh.GetSettingsByID(0), navMeshData, transform.position, transform.rotation);
+
+        // Add the new NavMesh data to the existing NavMesh
+        NavMesh.AddNavMeshData(navMeshData);
     }
 
     // Update is called once per frame
@@ -92,6 +113,7 @@ public class RandomGen : MonoBehaviour
                     tileToAdd = Instantiate(tile[0], new Vector3(x, -1, y), transform.rotation);
                     tileToAdd.transform.parent = this.gameObject.transform;
                     tileToAdd.AddComponent<BoxCollider>();
+                    tileToAdd.layer = 11;
                     tileToAdd.tag = "ground";
                     tileToAdd.name = "Grass: " + x + "," + y.ToString();
                 }           
@@ -237,7 +259,7 @@ public class RandomGen : MonoBehaviour
     }
 
     //-SET-WORLD-VALUES
-    public void SetOccupied(int mapX, int mapY)
+  /*  public void SetOccupied(int mapX, int mapY)
     {
         for (int x = mapX - 1; x <= mapX + 1; x++)
         {
@@ -252,7 +274,7 @@ public class RandomGen : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
     //-BAKE-NAV-MESH-----
     void UpdateNavMesh()
