@@ -45,7 +45,6 @@ public class ResourceNode : MonoBehaviour
         {
             Debug.Log("farming done");
             crops.state = FarmController.states.idle;
-            currentResources = maxResources;
         }
     }
 }

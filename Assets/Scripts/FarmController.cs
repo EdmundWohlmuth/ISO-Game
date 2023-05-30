@@ -58,6 +58,7 @@ public class FarmController : MonoBehaviour
                 if (currentTime <= totalTime)
                 {
                     currentTime += Time.deltaTime;
+                    GameManager.gameManager.DisplayProgress(gameObject.transform.position, 1.5f, Mathf.InverseLerp(totalTime, 0, currentTime));
                 }
                 else
                 {                    
@@ -65,6 +66,7 @@ public class FarmController : MonoBehaviour
                     crops.SetActive(true);
                     node = GetComponentInChildren<ResourceNode>();
                     currentTime = 0;
+                    node.currentResources = totalFood;
                     state = states.grown;
                 }
 

@@ -206,23 +206,28 @@ public class VillagerController : MonoBehaviour
                 break;
 
             case playerState.harvestingCrops:
-                if (currentNode == null) return;
+                if (currentNode.GetComponent<ResourceNode>() == null) return;
+                if (currentNode.GetComponent<ResourceNode>().currentResources == 0)
+                {
+                    state = playerState.planting;
+                    return;
+                }
 
                 //Debug.Log(Vector3.Distance(gameObject.transform.position, currentNode.transform.position));
                 if (Vector3.Distance(gameObject.transform.position, currentNode.transform.position) <= 1.4)
                 {
                     CollectionTimer();
                 }
-
                 if (collected == carryCapacity)
                 {
                     Return();
                 }
 
+
                 break;
 
             case playerState.planting:
-
+                if (!currentNode.GetComponent<FarmController>()) currentNode = currentNode.transform.parent.gameObject;
                 if (currentNode.GetComponent<FarmController>().state == FarmController.states.idle)
                 {
                     //Debug.Log("idle");
@@ -291,7 +296,19 @@ public class VillagerController : MonoBehaviour
         {
            // Debug.Log("Value: " + harvestValue);
             currentNode.GetComponent<ResourceNode>().DecrimentResources(harvestValue);
-            collected += harvestValue;
+            if (currentNode.GetComponent<ResourceNode>().currentResources <= 0)
+            {               
+                Return();
+                if (resource == currentResource.food)
+                {
+                    state = playerState.planting;
+                }                  
+                else state = playerState.walking;
+
+
+            }
+            else collected += harvestValue;
+
         } 
         else if (collected >= carryCapacity || currentNode == null)
         {

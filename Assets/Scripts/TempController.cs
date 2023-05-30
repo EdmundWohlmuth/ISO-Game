@@ -63,10 +63,10 @@ public class TempController : MonoBehaviour
     void Movement()
     {
         verticalSpeed = Input.GetAxis("Vertical") * Time.deltaTime;
-        transform.Translate(verticalSpeed * 8f, 0, 0);
+        transform.Translate(verticalSpeed * 8f, 0, horizontalSpeed);
 
         horizontalSpeed = Input.GetAxis("Horizontal") * Time.deltaTime;
-        transform.Translate(0, 0, horizontalSpeed * -8f);
+        transform.Translate(verticalSpeed, 0, horizontalSpeed * -8f);
 
         if (Input.GetKeyDown(KeyCode.Q) && !DOTween.IsTweening(this.transform))
         {
