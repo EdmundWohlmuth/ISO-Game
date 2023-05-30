@@ -277,14 +277,8 @@ public class RandomGen : MonoBehaviour
     }*/
 
     //-BAKE-NAV-MESH-----
-    void UpdateNavMesh()
+    public void UpdateNavMesh()
     {
-        for (int x = 0; x < height; x++)
-        {
-            for (int z = 0; z < depth; z++)
-            {
-                
-            }
-        }
+        surface.BuildNavMesh();
     }
 }

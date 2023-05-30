@@ -279,6 +279,7 @@ public class VillagerController : MonoBehaviour
                     {
                         if (GenaricTimer(1))
                         {
+                            if (GameManager.gameManager.woodPool <= 0) return;
                             collected += woodCollectionAmmount;
                             GameManager.gameManager.woodPool -= woodCollectionAmmount;
                         }

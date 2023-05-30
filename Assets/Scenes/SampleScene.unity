@@ -1540,6 +1540,7 @@ MonoBehaviour:
   requiredWood: 60
   requiredStone: 0
   progress: 0
+  isDone: 0
 --- !u!1 &534797934
 GameObject:
   m_ObjectHideFlags: 0
@@ -5443,6 +5444,14 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6600902743119953426, guid: abcf3e0a1c85bcb44a97dcd9b8f2c603, type: 3}
   m_PrefabInstance: {fileID: 6294475112124290061}
   m_PrefabAsset: {fileID: 0}
+--- !u!222 &919132148301326883
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148301326879}
+  m_CullTransparentMesh: 1
 --- !u!1001 &6294475112124290061
 PrefabInstance:
   m_ObjectHideFlags: 0

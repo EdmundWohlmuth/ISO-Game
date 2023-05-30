@@ -81,7 +81,7 @@ public class TempController : MonoBehaviour
     {
         if (Input.mouseScrollDelta.y >= 1)
         {
-            cam.orthographicSize++;
+            cam.orthographicSize--;
 
             if (cam.orthographicSize >= 25)
             {
@@ -90,7 +90,7 @@ public class TempController : MonoBehaviour
         }
         else if (Input.mouseScrollDelta.y <= -1)
         {
-            cam.orthographicSize--;
+            cam.orthographicSize++;
 
             if (cam.orthographicSize <= 5)
             {
@@ -187,7 +187,7 @@ public class TempController : MonoBehaviour
             dummyObject.AddComponent<BoxCollider>();
             dummyObject.GetComponent<BoxCollider>().size = new Vector3(2, 2, 2);
             Instantiate(dummyObject, new Vector3(x, 0.1f, z), dummyObject.transform.rotation);
-            if (dummyObject.name == "TownHall") dummyObject.GetComponent<SpawnVillagers>().SpawnVillager();    
+            if (dummyObject.name == "TownHall") dummyObject.GetComponent<SpawnVillagers>().SpawnVillager(); 
             
             Destroy(dummyObject);
             dummyObject = null;
@@ -222,11 +222,13 @@ public class TempController : MonoBehaviour
             var newObj = Instantiate(dummyObject, new Vector3(x, -0.4f, z), dummyObject.transform.rotation);
             newObj.GetComponent<BoxCollider>().size = new Vector3(1, 0.4f, 1);
             newObj.layer = 11;
+            newObj.transform.parent = GameObject.Find("LevelGen").transform;
 
             Destroy(dummyObject);
             dummyObject = null;
 
             bridging = false;
+            randGen.UpdateNavMesh();
         }
     }
 
