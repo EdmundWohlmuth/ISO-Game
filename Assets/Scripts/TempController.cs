@@ -14,7 +14,7 @@ public class TempController : MonoBehaviour
     [Header("tilemap")]
     [SerializeField] RandomGen randGen;
     int[,] worldMap;
-    int[,] clutterMap;
+    int[,] resourceMap;
     [SerializeField] GameObject dummyObject;
 
     [Header("Build Objects")]
@@ -40,8 +40,8 @@ public class TempController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        worldMap = randGen.tileMap;
-        clutterMap = randGen.resourceMap;
+        worldMap = RandomGen.randomGen.tileMap;
+        resourceMap = RandomGen.randomGen.resourceMap;
 
         // camera movement
         Movement();
@@ -129,6 +129,7 @@ public class TempController : MonoBehaviour
             {
                 worldPos = Vector3Int.FloorToInt(worldPos);
                 //-PLACEMENT-----------
+                Debug.Log("Clicked at " + (int)worldPos.x + ", " + (int)worldPos.z);
                 if (buildingHouse || tillingLand || bridging) PlaceObj((int)worldPos.x, (int)worldPos.z);
             }
         }
@@ -191,7 +192,6 @@ public class TempController : MonoBehaviour
             
             Destroy(dummyObject);
             dummyObject = null;
-            //randGen.SetOccupied(x, z);
 
             buildingHouse = false;
         }
@@ -228,14 +228,15 @@ public class TempController : MonoBehaviour
             dummyObject = null;
 
             bridging = false;
-            randGen.UpdateNavMesh();
+            RandomGen.randomGen.UpdateNavMesh();
         }
+        RandomGen.randomGen.SetOccupied(x, z);
     }
 
     bool PlacementCheck(int x, int z)
     {
-        if (randGen.GetSurroundingTileCount(x, z, worldMap) == 8 &&
-        randGen.GetSurroundingTileCount(x, z, clutterMap) == 0)
+        if (RandomGen.randomGen.GetSurroundingTileCount(x, z, RandomGen.randomGen.tileMap) == 8 &&
+        RandomGen.randomGen.GetSurroundingTileCount(x, z, RandomGen.randomGen.resourceMap) == 0)
         {
             return true;
         }
@@ -243,11 +244,11 @@ public class TempController : MonoBehaviour
     }
     bool SingleTilePlacementCheckint(int x, int z)
     {
-        if (randGen.tileMap[x, z] == 0) return true;
+        if (RandomGen.randomGen.tileMap[x, z] == 0) return true;
         else return false;
     }
 
-    //-BUILDING-SELECTION--------
+    //-UI-BUILDING-SELECTION-----
     public void PlaceHouse()
     {
         dummyObject = Instantiate(house, transform.position, transform.rotation);

@@ -58,7 +58,11 @@ public class VillagerController : MonoBehaviour
     [SerializeField] int collected;
     int woodCollectionAmmount = 5;
     int stoneCollectionAmmount = 2;
-    int foodCollectionAmmount = 10;
+    int foodCollectionAmmount = 2;
+
+    [Header("Food/Survival")]
+    [SerializeField] float eatTime;
+    [SerializeField] float maxEatTime;
 
     // Start is called before the first frame update
     void Start()
@@ -77,6 +81,7 @@ public class VillagerController : MonoBehaviour
         PlayerInput();
         Indicator();
         StateController();
+        FoodCheck();
     }
 
     void Indicator()
@@ -126,7 +131,7 @@ public class VillagerController : MonoBehaviour
                     state = playerState.chopingWood;
                     resource = currentResource.wood;
                     harvestValue = woodCollectionAmmount;
-                    Debug.Log("Value: " + harvestValue);
+                    //Debug.Log("Value: " + harvestValue);
                 }
                 else if (hit.transform.tag == "rock" && collected == 0 || hit.transform.tag == "rock" && resource == currentResource.stone)
                 {
@@ -351,6 +356,14 @@ public class VillagerController : MonoBehaviour
             agent.SetDestination(currentNode.transform.position);
         }
     }
+
+    void FoodCheck()
+    {
+        if (FoodTimer())
+        {
+            GameManager.gameManager.foodPool--;
+        }
+    }
     void CollectionTimer()
     {
         if (harvestTime <= 0)
@@ -377,6 +390,20 @@ public class VillagerController : MonoBehaviour
         {            
             harvestTime -= Time.deltaTime;
             //Debug.Log(harvestTime);
+            return false;
+        }
+    }
+
+    bool FoodTimer()
+    {
+        if (eatTime <= 0)
+        {
+            eatTime = maxEatTime;
+            return true;
+        }
+        else
+        {
+            eatTime -= Time.deltaTime;         
             return false;
         }
     }

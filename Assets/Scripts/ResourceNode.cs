@@ -38,7 +38,9 @@ public class ResourceNode : MonoBehaviour
 
         if (currentResources <= 0 && resource != resourceType.food)
         {
-            gen.resourceMap[x, y] = 0;
+            RandomGen.randomGen.UpdateResourceMapData(x, y);
+            Debug.Log("Destroyng " + gameObject.name + " at " + x + ", " + y);
+            Debug.Log("State of tile " + gameObject.name + ": " + RandomGen.randomGen.resourceMap[x, y]);
             Destroy(gameObject);
         }
         else if ((currentResources <= 0 && resource == resourceType.food))

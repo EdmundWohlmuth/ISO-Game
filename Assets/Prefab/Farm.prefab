@@ -125,7 +125,7 @@ MonoBehaviour:
   seedlings: {fileID: 3021115185806915429}
   seeded: 0
   harvested: 0
-  foodAmmount: 60
+  foodAmmount: 10
   node: {fileID: 3021115185349333443}
   currentTime: 0
   totalTime: 60
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   refrence: {fileID: 0}
   currentResources: 0
-  requiredWood: 20
+  requiredWood: 25
   requiredStone: 0
   progress: 0
   isDone: 0

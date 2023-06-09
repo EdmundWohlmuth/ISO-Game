@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class RandomGen : MonoBehaviour
 {
+    public static RandomGen randomGen;
     [SerializeField] GameObject[] tile;
     public NavMeshSurface surface;
     GameObject tileToAdd;
@@ -23,6 +24,19 @@ public class RandomGen : MonoBehaviour
 
     [Header("Resource Values")]
     [SerializeField] int woodAmmount = 90;
+
+    private void Awake()
+    {
+        if (randomGen == null)
+        {
+            randomGen = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (randomGen != this && randomGen != null)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -167,10 +181,12 @@ public class RandomGen : MonoBehaviour
                 if (nearbyTiles > 4)
                 {
                     map[x, y] = 1;
+                    Debug.Log(x + ", " + y + " = " + map[x, y]);
                 }
                 else if (nearbyTiles < 4)
                 {
                     map[x, y] = 0;
+                    Debug.Log(x + ", " + y + " = " + map[x, y]);
                 }
             }
         }
@@ -202,7 +218,7 @@ public class RandomGen : MonoBehaviour
                 }
             }
         }
-
+        //Debug.Log(count);
         return count;
     }
     
@@ -276,9 +292,24 @@ public class RandomGen : MonoBehaviour
         }
     }*/
 
+    //-UPDATE-LEVEL-DATA-
     //-BAKE-NAV-MESH-----
     public void UpdateNavMesh()
     {
         surface.BuildNavMesh();
+    }
+    public void UpdateResourceMapData(int x, int z)
+    {
+        resourceMap[x, z] = 0;
+        Debug.Log("new Value: " + resourceMap[x, z]);
+    }
+    public void UpdateTileMapData(int x, int z)
+    {
+
+    }
+    public void SetOccupied(int x, int z)
+    {
+        resourceMap[x, z] = 1;
+        Debug.Log(resourceMap[x, z]);
     }
 }
