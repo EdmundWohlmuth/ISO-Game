@@ -8,9 +8,19 @@ public class TempController : MonoBehaviour
 {
     static TempController tempController;
 
-    float verticalSpeed = 15f;
-    float horizontalSpeed = 15f;
-    Camera cam;
+    [Header("Variables")]
+    [SerializeField] float speed;
+    [SerializeField] float fastSpeed;
+    [SerializeField] float zoomSpeed;
+    [SerializeField] float rotationSpeed;
+    [SerializeField] float maxHeight = 75f;
+    [SerializeField] float minHeight = 5f;
+    public GameObject anchor;
+    public Camera cam;
+    //rotation values
+    Quaternion newRotation;
+    Vector3 rotateStartPos;
+
     [Header("tilemap")]
     [SerializeField] RandomGen randGen;
     int[,] worldMap;
@@ -31,7 +41,10 @@ public class TempController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main;
+        cam = gameObject.GetComponent<Camera>();
+        newRotation = anchor.transform.localRotation;
+
+        //cam = Camera.main;
         dummyObject = Instantiate(dummyObject, transform.position, transform.rotation);
         dummyObject.name = "TownHall";
         buildingHouse = true;        
@@ -44,9 +57,10 @@ public class TempController : MonoBehaviour
         resourceMap = RandomGen.randomGen.resourceMap;
 
         // camera movement
-        Movement();
+        KeyboardControls();
+        MouseControls();
         BuildingControl();
-        CameraScroll();
+
 
         // raycast to curosr pos
         MouseToPos();
@@ -60,25 +74,30 @@ public class TempController : MonoBehaviour
         }
     }
 
-    void Movement()
+    void KeyboardControls()
     {
-        verticalSpeed = Input.GetAxis("Vertical") * Time.deltaTime;
-        transform.Translate(verticalSpeed * 8f, 0, horizontalSpeed);
+        // set speeds
+        speed = gameObject.transform.position.y / 150; // faster when farther out, slower while closer
+        if (Input.GetKey(KeyCode.LeftShift)) fastSpeed = 1.5f;
+        else fastSpeed = 1f;
 
-        horizontalSpeed = Input.GetAxis("Horizontal") * Time.deltaTime;
-        transform.Translate(verticalSpeed, 0, horizontalSpeed * -8f);
+        // Movement
+        float horizontal = speed * fastSpeed * Input.GetAxis("Horizontal");
+        float vertical = speed * fastSpeed * Input.GetAxis("Vertical");
+        float scroll = -zoomSpeed * fastSpeed * Input.mouseScrollDelta.y;
 
-        if (Input.GetKeyDown(KeyCode.Q) && !DOTween.IsTweening(this.transform))
-        {
-            this.transform.DOLocalRotate(new Vector3(0, 90f, 0), 3f).SetRelative();
-        }
-        else if (Input.GetKeyDown(KeyCode.E) && !DOTween.IsTweening(this.transform))
-        {
-            this.transform.DORotate(new Vector3(0, -90f, 0), 3f).SetRelative();
-        }
-    }
-    void CameraScroll()
-    {
+        Vector3 horizontalMove = horizontal * transform.right;
+        Vector3 forwardMove = transform.forward;
+        Vector3 verticalMove = new Vector3(0, scroll, 0);
+
+        forwardMove.y = 0;
+        forwardMove.Normalize();
+        forwardMove *= vertical;
+
+        Vector3 move = verticalMove + horizontalMove + forwardMove;
+        anchor.transform.localPosition += move;
+
+        // Camera Scroll
         if (Input.mouseScrollDelta.y >= 1)
         {
             cam.orthographicSize--;
@@ -98,6 +117,24 @@ public class TempController : MonoBehaviour
             }
         }
     }
+    void MouseControls() // Imperfect - Look into later
+    {
+        if (Input.GetMouseButtonDown(2))
+        {
+            rotateStartPos = Input.mousePosition;
+        }
+        else if (Input.GetMouseButton(2)) // else if avoids executing both conditions at the same time
+        {
+            Vector3 rotateCurrentPos = Input.mousePosition;
+            Vector3 difference = rotateStartPos - rotateCurrentPos;
+            rotateStartPos = rotateCurrentPos;
+
+            newRotation *= Quaternion.Euler(Vector3.up * (-difference.x / 5f));
+
+            anchor.transform.localRotation = newRotation;
+        }
+    }
+
     void MouseToPos()
     {
         Vector3 mousePos = Input.mousePosition;
@@ -207,7 +244,7 @@ public class TempController : MonoBehaviour
                 }
             }
 
-            var newObj = Instantiate(dummyObject, new Vector3(x, -0.5f, z), transform.rotation);
+            var newObj = Instantiate(dummyObject, new Vector3(x, -0.5f, z), transform.localRotation);
 
             Destroy(dummyObject);
             dummyObject = null;
