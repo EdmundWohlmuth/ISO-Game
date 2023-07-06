@@ -45,7 +45,7 @@ public class TempController : MonoBehaviour
         newRotation = anchor.transform.localRotation;
 
         //cam = Camera.main;
-        dummyObject = Instantiate(dummyObject, transform.position, transform.rotation);
+        dummyObject = Instantiate(dummyObject, transform.position, Quaternion.Euler(0, 0, 0));
         dummyObject.name = "TownHall";
         buildingHouse = true;        
     }
@@ -244,7 +244,7 @@ public class TempController : MonoBehaviour
                 }
             }
 
-            var newObj = Instantiate(dummyObject, new Vector3(x, -0.5f, z), transform.localRotation);
+            var newObj = Instantiate(dummyObject, new Vector3(x, -0.5f, z), dummyObject.transform.localRotation);
 
             Destroy(dummyObject);
             dummyObject = null;
@@ -288,17 +288,17 @@ public class TempController : MonoBehaviour
     //-UI-BUILDING-SELECTION-----
     public void PlaceHouse()
     {
-        dummyObject = Instantiate(house, transform.position, transform.rotation);
+        dummyObject = Instantiate(house, transform.position, Quaternion.Euler(0, 0, 0));
         buildingHouse = true;
     }
     public void PlaceFarm()
     {
-        dummyObject = Instantiate(farm, transform.position, transform.rotation);
+        dummyObject = Instantiate(farm, transform.position, Quaternion.Euler(0, 0, 0));
         tillingLand = true;
     }
     public void PlaceBridge()
     {
-        dummyObject = Instantiate(bridge, transform.position, transform.rotation);
+        dummyObject = Instantiate(bridge, transform.position, Quaternion.Euler(0, 0, 0));
         bridging = true;
     }
 
